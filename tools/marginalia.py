@@ -65,7 +65,11 @@ def section_of(h2_text):
 
 def process(chapter_dir: Path, content_dir: Path):
     page_path = chapter_dir / "index.html"
-    tree = LH.parse(str(page_path))
+    # Force UTF-8 both ways: lxml's encoding sniffing misreads Zola's
+    # output as Latin-1 and double-encodes every non-ASCII character
+    # (mojibake: ⊕ -> âŠ•). Learned the hard way, 2026-11-01.
+    parser = LH.HTMLParser(encoding="utf-8")
+    tree = LH.parse(str(page_path), parser)
     root = tree.getroot()
     prose = None
     for div in root.iter("div"):
@@ -138,7 +142,7 @@ def process(chapter_dir: Path, content_dir: Path):
         prose.insert(0, label_el)
         prose.insert(0, toggle)
 
-    tree.write(str(page_path), method="html")
+    tree.write(str(page_path), method="html", encoding="utf-8")
 
     # --- print edition --------------------------------------------------------
     print_tree = deepcopy(tree)
@@ -163,7 +167,7 @@ def process(chapter_dir: Path, content_dir: Path):
         pprose.insert(0, note)
     out_dir = chapter_dir / "print"
     out_dir.mkdir(exist_ok=True)
-    print_tree.write(str(out_dir / "index.html"), method="html")
+    print_tree.write(str(out_dir / "index.html"), method="html", encoding="utf-8")
     print(f"  {chapter_dir.name}: {len(anchors)} anchors, {placed} notes, "
           f"print edition written")
 
