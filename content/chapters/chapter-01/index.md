@@ -53,6 +53,12 @@ way you'd poke a new programming language at a REPL:
 9 ⊗ 0  = 9        (0 is the identity for ⊗: 0 + a = a)
 ```
 
+![The two operations as tables: minima on the left, sums on the right](figures/ch01-operations-tables.svg)
+
+*The whole semiring at a glance, for small values of "whole." Left:
+⊕ — read the idempotence straight off the diagonal, where `a ⊕ a = a`.
+Right: ⊗, ordinary addition wearing a costume.*
+
 Everything should feel *almost* normal, and then one thing should itch:
 **`5 ⊕ 5 = 5`.** In ordinary arithmetic, adding a thing to itself makes
 it bigger. Tropically, `a ⊕ a = a` for every `a`. This property is called
@@ -127,6 +133,13 @@ Let's compute our first one, by hand, completely.
 | (1, 1) | (1, 1, 0) | once: only `0` | no |
 | (−1, 1) | (−1, 1, 0) | once: only `x` | no |
 | (1, −1) | (1, −1, 0) | once: only `y` | no |
+
+![The six scored points: ties on the rays, single winners off them](figures/ch01-six-points.svg)
+
+*The table, drawn. Orange dots tie, and sit exactly on the rays; red
+crosses have a single winner, and sit in the open regions between
+them. Every point in the plane is one or the other — that dichotomy
+is the curve.*
 
 Now let's find *all* the ties, not just at our sample points.
 
@@ -207,6 +220,12 @@ general: `Σ wᵢ·vᵢ = 0`, where `wᵢ` are positive integer *weights* we'll
 meet in Chapter 2 — here all weights are 1). The rays pull in their
 directions with their weights, and the total pull is zero, like forces
 in equilibrium, or currents at a node satisfying Kirchhoff's law.
+
+![Balancing: three pulls at a vertex, and the same three vectors head-to-tail closing into a loop](figures/ch01-balancing-arrows.svg)
+
+*Left: the three ray directions as pulls from the vertex. Right: the
+same three vectors head-to-tail. They close — that loop closing is
+what `(0, 1) + (1, 0) + (−1, −1) = (0, 0)` looks like.*
 
 Balancing is the discrete soul of the subject. A random tripod is just a
 graph; a *balanced* graph is a curve — it's the condition that lets these
@@ -328,7 +347,11 @@ figure `files/figures/day00-tropical-line.png`, study log Day 0 entry.
 All code in §1.5 was executed and passed on 2026-10-30; one assertion in
 an early draft of the Try It answers was caught by that run (the
 southwest ray of `min(x, y, 1)` does pass through the origin) and the
-answer above is the corrected one.*
+answer above is the corrected one. The three extra figures (the
+operations tables, the six points drawn, the balancing arrows) were
+added 2026-11-01: code `hidden_files/code/ch01_extra_figures.py`,
+asserted the same way — classification, idempotence diagonal, and the
+balancing sum are all checked in code before anything is drawn.*
 
 ## Chapter code
 
