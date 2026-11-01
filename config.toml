@@ -1,0 +1,22 @@
+# Zola configuration — https://www.getzola.org/documentation/getting-started/configuration/
+base_url = "https://minplus.xyz"
+title = "Learn You a Tropical Geometry for Great Good!"
+description = "A tropical geometry tutorial built from a 21-day study in which every claim is asserted in code: addition is min, multiplication is plus, and every picture is a theorem the code checked."
+
+default_language = "en"
+compile_sass = true
+# Off so the View Source compile banner (HTML comment in base.html) survives,
+# same reasoning as cyclefive-site: Zola's minify path strips comments.
+minify_html = false
+build_search_index = false
+generate_feeds = false
+
+[markdown]
+smart_punctuation = true
+
+[extra]
+tagline = "Addition is min. Multiplication is plus. Every picture is a theorem the code checked."
+copyright_year = 2026
+repo_url = "https://github.com/cycle-five/minplus-site"
+discord_url = "https://discord.gg/b6KVpfH9CF"
+telegram_url = "https://t.me/cracktunes"

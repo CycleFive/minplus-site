@@ -1,0 +1,291 @@
++++
+title = "The Cubic Has a Donut Inside It"
+description = "The tropical cubic: one interior lattice point, one 6-cycle, genus 1 — predicted from the Newton triangle before it is computed."
+weight = 3
+[extra]
+number = 3
+lead = "One interior lattice point, one cycle: the tropical elliptic curve, predicted before it is drawn."
++++
+
+
+Every classical geometer knows the smooth cubic by its other name: an
+**elliptic curve**, genus 1, topologically a torus — a donut. Chapter 2
+proved, with a lattice-point count, that no conic could ever grow a
+cycle. This chapter cashes the cheque Chapter 2 wrote: at degree 3 the
+Newton triangle acquires exactly one interior lattice point, and the
+tropical cubic grows exactly one cycle. We will predict the entire
+curve — vertices, edges, rays, the cycle, even its length — from the
+triangle alone, *before* computing, and then make the computation sign
+for every line.
+
+## 3.1 Predict first (the house rule, applied)
+
+The degree-3 Newton triangle has corners (0,0), (3,0), (0,3) and ten
+lattice points. Exactly one is interior:
+
+```
+(1, 1)      — since (d−1)(d−2)/2 = 1 for d = 3
+```
+
+Now choose heights designed to subdivide the triangle into unit
+triangles (a **unimodular triangulation** — the tropical meaning of
+"smooth"):
+
+```
+c(i, j) = i² + j² + i·j
+```
+
+(The cross term `i·j` is doing real work: it breaks the flat spots
+that `i² + j²` alone leaves at this degree, giving a full 6-triangle
+fan around (1,1).) Predictions, all from Chapter 2's dictionary:
+
+1. **9 faces.** The triangle has area 9/2; unit triangles have area
+   ½. So a unimodular triangulation has exactly **9 faces → 9
+   vertices** on the curve.
+2. **9 rays.** The boundary has 9 unit edges (3 per side), each dual
+   to a weight-1 ray: **3 each** in directions (0,1), (1,0), (−1,−1).
+   Total weight 3 per direction — degree 3, read at infinity.
+3. **9 bounded edges.** Count edge-face incidences: `3·9 = 27 =
+   2·(interior edges) + 9` (boundary), so interior edges — dual to
+   bounded curve edges — number **9**.
+4. **Genus 1.** `g = E − V + 1 = 9 − 9 + 1 = 1`. And by Chapter 2's
+   theorem it *must* be 1: one interior point.
+5. **The cycle is the star of (1,1).** A point inside the triangulation
+   is surrounded by triangles — its **star**. Vertices of the curve
+   dual to star faces are arranged in a ring, because the star is a
+   fan. With 6 triangles around (1,1), expect a **6-cycle**; the other
+   3 bounded edges are bridges — trees grafted onto the ring,
+   connecting it to the three corner vertices.
+
+If the computation disagrees with any of this, either the code or the
+dictionary is wrong, and either way we learn something. Run it.
+
+## 3.2 The computation signs
+
+The full Day 2 program computes the subdivision from the lower hull
+(it does *not* take the triangulation on faith), solves each face's
+tie equations, and asserts its way down the prediction list. Result:
+
+- **9 unit triangles**, exactly tiling the triangle. ✓
+- **9 vertices**; three spot-checks solved by hand in advance —
+  face {(0,0),(1,0),(0,1)} ↦ (−1,−1), {(1,0),(2,0),(1,1)} ↦ (−3,−2),
+  {(1,0),(0,1),(1,1)} ↦ (−2,−2) — all match the computation exactly. ✓
+- **Balancing** asserted at all 9 vertices. ✓
+- **9 bounded edges, 9 rays** with direction multiset
+  {3×(0,1), 3×(1,0), 3×(−1,−1)}, all weight 1. ✓
+- All vertices, edge-midpoints and ray tips found on the sampled mask;
+  all 9 rays **inferred back from the mask alone** (Chapter 2's
+  bitmap method, re-centred on the curve), snap error 0.00°,
+  balancing on inferred directions = (0, 0). ✓
+
+![Tropical cubic: triangulated Newton triangle with the star of (1,1) in red; the curve with its 6-cycle in red](figures/day02-tropical-cubic.svg)
+
+*Figure 3.1 — Left: the Newton triangle, the star of the interior
+point (1,1) shaded red. Right: the tropical cubic — red 6-cycle, grey
+bridges, blue rays. The red on the left* is *the red on the right,
+dualised.*
+
+## 3.3 Finding the cycle: leaf-stripping
+
+How do you *prove* the bounded graph's only cycle is the predicted
+ring, rather than eyeballing the picture? Strip it:
+
+> **Leaf-stripping.** Repeatedly delete vertices of degree 1 (with
+> their edge). Trees are eaten completely — every tree has a leaf,
+> and deleting leaves creates new leaves until nothing is left.
+> Whatever survives, survives because every vertex on it has degree
+> ≥ 2. For our graph, what survives is exactly the cycle.
+
+Applied to the 9-vertex bounded graph: the three corner vertices
+(faces (0,0),(1,0),(0,1); (2,0),(3,0),(2,1); (0,2),(1,2),(0,3)) are
+degree-1 and get stripped, and stripping stops on **6 vertices,
+2-regular** — a single 6-cycle. Then the duality check, which is the
+chapter's real theorem:
+
+- The 6 cycle vertices are *exactly* the faces containing (1,1) —
+  the star. No more, no fewer.
+- Every cycle edge is dual to a subdivision edge **incident to
+  (1,1)**.
+- The other 3 bounded edges are verified **bridges** (delete one and
+  the graph disconnects — the computational definition of "tree part").
+
+So the cycle isn't *near* the interior point, or *caused* by it in
+some vague sense. **The cycle is the star, read in the dual picture:**
+each interior lattice point contributes its star, and the star
+dualises to a cycle. One interior point, one cycle. This is
+Chapter 2's genus formula with its sleeves rolled up.
+
+Even the cycle's size is computable, edge by edge from the vertex
+coordinates: four edges of length 1 and two of length √2, total
+
+```
+L = 4 + 2√2 ≈ 6.828
+```
+
+Remember that number. Much later in this book (Part VI) this cycle
+acquires a *group law*, and `L` becomes the circumference of its
+Jacobian — the tropical elliptic curve turns out to be, metrically,
+a circle of length `4 + 2√2` wearing a graph as a name tag.
+
+## 3.4 The classical postcard
+
+Classically: a smooth plane cubic is a torus; its genus, computed by
+adjunction, is `(3−1)(3−2)/2 = 1`. Tropically: the bounded graph's
+first Betti number is 1. **Same number, same formula, two worlds.**
+The tropical curve is often described as the *skeleton* the torus
+leaves behind when the complex structure degenerates — the donut
+deflated onto its core circle, with trees where the rest of the
+surface used to hang. That's not just a metaphor in this book's later
+chapters; Part VI does divisor theory on the graph itself and
+recovers the elliptic curve's group law as *rotation of the cycle*.
+
+## 3.5 The whole chapter, as a program
+
+```python
+from fractions import Fraction as F
+from itertools import combinations
+import math
+
+PTS = [(0,0), (1,0), (2,0), (3,0), (0,1), (1,1), (2,1), (0,2), (1,2), (0,3)]
+C = {p: p[0]**2 + p[1]**2 + p[0]*p[1] for p in PTS}   # heights i^2+j^2+ij
+def val(p, x, y): return C[p] + p[0]*x + p[1]*y
+
+# the regular triangulation (computed from the lower hull in the full program)
+FACES = [{(0,0),(1,0),(0,1)}, {(2,0),(3,0),(2,1)}, {(0,2),(1,2),(0,3)},
+         {(1,0),(2,0),(1,1)}, {(1,0),(0,1),(1,1)}, {(2,0),(1,1),(2,1)},
+         {(1,1),(2,1),(1,2)}, {(1,1),(0,2),(1,2)}, {(0,1),(1,1),(0,2)}]
+VERTS = [(-1,-1), (-5,-3), (-3,-5), (-3,-2), (-2,-2),
+         (-4,-3), (-4,-4), (-3,-4), (-2,-3)]
+
+def area2(face):
+    (x1,y1),(x2,y2),(x3,y3) = sorted(face)
+    return abs(x1*(y2-y3) + x2*(y3-y1) + x3*(y1-y2))
+for face, (x, y) in zip(FACES, VERTS):
+    assert area2(face) == 1                            # unit triangles
+    vals = {p: val(p, F(x), F(y)) for p in PTS}
+    m = min(vals.values())
+    assert {p for p, v in vals.items() if v == m} == face
+assert sum(area2(f) for f in FACES) == 9               # tiles area-9/2 triangle
+
+# bounded edges = subdivision edges shared by two faces; rays dual to the rest
+bounded, boundary = [], 0
+all_edges = {}
+for a, b in combinations(range(9), 2):
+    shared = FACES[a] & FACES[b]
+    if len(shared) == 2:
+        bounded.append((a, b))
+for f in FACES:
+    for e in combinations(sorted(f), 2):
+        all_edges[e] = all_edges.get(e, 0) + 1
+boundary = sum(1 for n in all_edges.values() if n == 1)
+assert len(bounded) == 9 and boundary == 9             # 9 bounded, 9 rays
+
+# leaf-strip the bounded graph: trees fall off, the cycle remains
+adj = {i: set() for i in range(9)}
+for a, b in bounded:
+    adj[a].add(b); adj[b].add(a)
+rem = {v: set(n) for v, n in adj.items()}
+changed = True
+while changed:
+    changed = False
+    for v in [v for v, n in rem.items() if len(n) == 1]:
+        (u,) = rem[v]; rem[u].discard(v); del rem[v]; changed = True
+cycle = set(rem)
+star = {i for i, f in enumerate(FACES) if (1, 1) in f}
+assert cycle == star and len(cycle) == 6               # cycle = star of (1,1)
+assert all(len(n) == 2 for n in rem.values())          # 2-regular: one cycle
+cyc_len = sum(math.dist(VERTS[a], VERTS[b]) for a, b in bounded if a in cycle and b in cycle)
+assert abs(cyc_len - (4 + 2*math.sqrt(2))) < 1e-9, cyc_len
+
+genus = len(bounded) - len(FACES) + 1
+interior = [p for p in PTS if p[0] > 0 and p[1] > 0 and sum(p) < 3]
+assert genus == 1 and interior == [(1, 1)]
+print(f"Chapter 3: all assertions pass. Genus: {genus} | cycle length: {cyc_len:.3f}")
+```
+
+```
+Chapter 3: all assertions pass. Genus: 1 | cycle length: 6.828
+```
+
+> **Honest Box — what this program checks.** As in Chapter 2, the
+> compact program lists the triangulation and verifies everything
+> downstream, exactly: unit areas, tiling, global ties at all 9
+> vertices, edge counts, the leaf-stripping, cycle = star, cycle
+> length, genus. The triangulation itself (lower hull via `ConvexHull`),
+> balancing at all 9 vertices, the bridge checks, and the mask
+> inference of the 9 rays are asserted in the full program
+> (`ch03_tropical_cubic.py`, the study's Day 2 code) — which was
+> re-run end-to-end while this chapter was being written, and passed.
+
+## 3.6 Try It
+
+1. **Predict the quartic.** Using only the dictionary: for a smooth
+   tropical quartic (degree 4, heights giving a unimodular
+   triangulation), predict (a) the number of faces/vertices, (b) the
+   number of rays, (c) the number of bounded edges — use
+   `3F = 2E_int + E_boundary` — and (d) the genus. Check (d) against
+   Chapter 2's interior-point count (Try It 2.9.3).
+2. **Strip by hand.** Draw (on paper!) the bounded graph from the
+   chapter program's bounded-edge list — faces 0–8, edges from shared
+   sides — and leaf-strip it with a pencil. Which three vertices fall
+   off? Confirm the survivors are exactly the faces containing (1,1).
+3. **Break smoothness.** The face {(0,0),(1,0),(0,1)} is a unit
+   triangle. Merge it with {(1,0),(0,1),(1,1)} into one quadrilateral
+   face. What happens to the dual vertex's valence, and to
+   weighted balancing there? (Qualitative answer is fine — this is
+   what "non-smooth" means tropically, and Part II will meet worse.)
+
+## Answers
+
+- **1.** (a) Triangle area `4²/2 = 8`, unit triangles of area ½ →
+  **16 faces = 16 vertices**. (b) Boundary unit edges: 4 per side →
+  **12 rays**. (c) `3·16 = 48 = 2E_int + 12` → **E_int = 18 bounded
+  edges**. (d) `g = 18 − 16 + 1 =` **3**, matching the 3 interior
+  points (1,1), (1,2), (2,1). ✓ (Day 18 of the study built exactly
+  this curve: its skeleton is three hexagons, pairwise sharing an
+  edge — a Deep Dive in Part VII.)
+- **2.** The corner faces 0, 1, 2 fall off — dual to the triangles at
+  the Newton triangle's corners. The survivors are faces 3–8, each
+  containing (1,1).
+- **3.** The two vertices merge into one vertex where **four** edges
+  meet (valence 4 instead of 3+3 across an edge). Balancing can still
+  hold — it's a sum over *all* edges at the vertex — but the curve is
+  no longer trivalent, i.e. no longer "smooth": tropically, a merged
+  face is a singular point where two vertices collided, the same
+  collision story as Chapter 2's warm-up, one dimension up.
+
+## What we learned
+
+- The dictionary is **predictive**: faces, rays, bounded edges and
+  genus were all computed from the Newton triangle before the curve
+  was drawn — and the curve complied.
+- **Interior lattice points ↔ cycles**, concretely: a point's star
+  dualises to a cycle; leaf-stripping isolates it; bridges are the
+  trees grafted on.
+- The tropical cubic's cycle has a **metric**: length `4 + 2√2`,
+  the circumference its Jacobian will turn out to have.
+- Genus is one number computed three compatible ways:
+  `E − V + 1`, interior points, `(d−1)(d−2)/2`.
+
+## Next — Part II: counting curves
+
+We can draw curves. Now we *count* them. Classical algebraic geometry
+asks: how many rational cubics pass through 8 general points? (Answer:
+12 — and for centuries you needed heavy machinery to prove it.)
+Chapter 4 counts them tropically, by taking floor diagrams apart and
+putting them back together — and lands on 12, then 620 quartics, with
+a program small enough to fit in a chapter.
+
+---
+
+*Source & provenance: Day 2 (2026-10-12) of the tropical geometry
+study — code `hidden_files/code/day02_tropical_cubic.py` (run log
+`hidden_files/day02-run.log`), figure
+`files/figures/day02-tropical-cubic.png`, study log Day 2 entry. The
+full Day 2 program was re-run end-to-end on 2026-10-30 while drafting
+(all checks passed); the compact code in §3.5 was executed separately
+and passed the same day.*
+
+## Chapter code
+
+The full program behind this chapter, as a download: [ch03_tropical_cubic.py](./ch03_tropical_cubic.py). The inline listing in the chapter is the compact, self-checking version.

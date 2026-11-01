@@ -1,0 +1,109 @@
+{#-
+  Compile banner: intentional HTML comment for View Source.
+  This site is a Zola build artifact (Markdown + Tera → static HTML), not
+  hand-authored HTML. minify_html is off so this comment survives the build.
+  EVERY value interpolated below needs | safe. Tera auto-escapes "/" to &#x2F;
+  in .html templates, and comment content — unlike attribute values — is raw
+  text a browser never decodes, so an unescaped slash breaks the URL outright.
+  content/ is hand-authored; a "-->" in a filename is not a realistic risk here.
+-#}
+{%- if page -%}
+  {%- set source_path = page.relative_path -%}
+{%- elif section -%}
+  {%- set source_path = section.relative_path -%}
+{%- else -%}
+  {%- set source_path = "" -%}
+{%- endif -%}
+<!DOCTYPE html>
+<!--
+  minplus.xyz — static HTML produced by Zola from this repo.
+  Authoring format: Markdown + Tera templates (not this file).
+{%- if source_path %}
+  This page ← content/{{ source_path | safe }}
+  Source: {{ config.extra.repo_url | safe }}/blob/master/content/{{ source_path | safe }}
+{%- else %}
+  This page ← generated shell (no Markdown source)
+  Source: {{ config.extra.repo_url | safe }}
+{%- endif %}
+  Rebuild: npm run build
+  Agents: request this URL with Accept: text/markdown for the raw source.
+-->
+<html lang="{{ config.default_language }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="generator" content="Zola (Markdown + Tera → static HTML)">
+
+  {% block head_meta %}
+  <title>{% block title %}{{ config.title }}{% endblock title %}</title>
+  <meta name="description" content="{% block description %}{{ config.description }}{% endblock description %}">
+  {% endblock head_meta %}
+
+  <meta property="og:title" content="{% block og_title %}{{ config.title }}{% endblock og_title %}">
+  <meta property="og:description" content="{% block og_description %}{{ config.description }}{% endblock og_description %}">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="{{ config.title }}">
+  {%- if current_url %}
+  <meta property="og:url" content="{{ current_url | safe }}">
+  {%- endif %}
+  {#- No og:image yet: the repo is text-only (figures ship as SVG so the whole
+      site can be pushed as UTF-8 source). Add a 1200x630 PNG here when one is
+      committed. -#}
+  <meta name="twitter:card" content="summary">
+
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/main.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <header class="site-header">
+    <div class="container site-header__inner">
+      <a class="wordmark" href="/" aria-label="Learn You a Tropical Geometry — home">
+        <span class="wordmark__mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32" width="28" height="28">
+            <defs>
+              <linearGradient id="wm-grad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#7c5cff"/>
+                <stop offset="1" stop-color="#00c2a8"/>
+              </linearGradient>
+            </defs>
+            <rect x="1" y="1" width="30" height="30" rx="9" fill="url(#wm-grad)"/>
+            <path d="M16 9v14M9 16h14" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <span class="wordmark__text">minplus</span>
+      </a>
+      <nav class="site-nav" aria-label="Primary">
+        <a href="/">Home</a>
+        <a href="/chapters/">Chapters</a>
+        <a class="site-nav__cta" href="https://cyclefive.xyz" rel="noopener">Cycle Five ↗</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content">
+    {% block content %}{% endblock content %}
+  </main>
+
+  <footer class="site-footer">
+    <div class="container site-footer__inner">
+      <p class="site-footer__brand">
+        <strong>Learn You a Tropical Geometry for Great Good!</strong><br>
+        {{ config.extra.tagline }}
+      </p>
+      <nav class="site-footer__links" aria-label="Footer">
+        <a href="/chapters/">Chapters</a>
+        <a href="https://cyclefive.xyz" rel="noopener">Cycle Five</a>
+        <a href="{{ config.extra.discord_url | safe }}" rel="noopener">Discord</a>
+        <a href="{{ config.extra.telegram_url | safe }}" rel="noopener">Telegram</a>
+      </nav>
+      <p class="site-footer__copy">© {{ config.extra.copyright_year }} Cycle Five Syndicate · Reading with an agent? Any page answers <code>Accept: text/markdown</code> with its raw Markdown source.</p>
+    </div>
+  </footer>
+</body>
+</html>

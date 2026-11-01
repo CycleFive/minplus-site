@@ -1,0 +1,1 @@
+{"description":"minplus.xyz — Learn You a Tropical Geometry for Great Good! (Zola static site)","devDependencies":{"serve-the-source":"github:cycle-five/serve-the-source"},"name":"minplus-site","private":true,"scripts":{"build":"zola build && serve-the-source --content content --out public --base minplus.xyz","serve":"zola serve"},"type":"module","version":"1.0.0"}

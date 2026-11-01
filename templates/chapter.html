@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Chapter {{ page.extra.number }} — {{ page.title }} · {{ config.title }}{% endblock title %}
+{% block description %}{% if page.description %}{{ page.description }}{% else %}{{ config.description }}{% endif %}{% endblock description %}
+{% block og_title %}Chapter {{ page.extra.number }} — {{ page.title }}{% endblock og_title %}
+{% block og_description %}{% if page.description %}{{ page.description }}{% else %}{{ config.description }}{% endif %}{% endblock og_description %}
+
+{% block content %}
+<article class="section">
+  <div class="container prose post">
+    <header class="page-header">
+      <p class="hero__eyebrow">Chapter {{ page.extra.number }} · Part I — Curves, tropicalised</p>
+      <h1 class="page-header__title">{{ page.title }}</h1>
+      {% if page.extra.lead %}
+      <p class="page-header__lead">{{ page.extra.lead }}</p>
+      {% endif %}
+      <p class="post-meta">
+        {%- if page.reading_time %}{{ page.reading_time }} min read{% endif %}
+      </p>
+    </header>
+    {{ page.content | safe }}
+    <footer class="post-footer">
+      <nav class="chapter-nav" aria-label="Chapter navigation">
+        {% if page.lower %}<a href="{{ page.lower.permalink | safe }}">← Chapter {{ page.lower.extra.number }} — {{ page.lower.title }}</a>{% else %}<span></span>{% endif %}
+        {% if page.higher %}<a href="{{ page.higher.permalink | safe }}">Chapter {{ page.higher.extra.number }} — {{ page.higher.title }} →</a>{% endif %}
+      </nav>
+      <p><a href="/chapters/">← All chapters</a></p>
+    </footer>
+  </div>
+</article>
+{% endblock content %}

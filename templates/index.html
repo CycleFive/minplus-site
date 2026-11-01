@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero">
+  <div class="container hero__inner">
+    <p class="hero__eyebrow">A Cycle Five tutorial · Tropical geometry</p>
+    <h1 class="hero__title">Learn You a Tropical Geometry for Great Good!</h1>
+    <p class="hero__lead">
+      Take ordinary geometry and replace addition with <strong>min</strong> and
+      multiplication with <strong>plus</strong>. Lines fall apart into balanced
+      tripods, cubics grow a cycle, and the Petersen graph turns out to be a
+      moduli space. Everything here is computed — every chapter ends with a
+      program whose assertions <em>are</em> the chapter's claims.
+    </p>
+    <div class="hero__actions">
+      <a class="btn btn--primary" href="/chapters/chapter-01/">Start with Chapter 1</a>
+      <a class="btn btn--ghost" href="/chapters/">All chapters</a>
+    </div>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="part1-heading">
+  <div class="container">
+    <h2 id="part1-heading" class="section__title">Part I — Curves, tropicalised</h2>
+    <div class="cards">
+      {% set chapters = get_section(path="chapters/_index.md") %}
+      {% for page in chapters.pages %}
+      <article class="card">
+        <div class="card__body">
+          <h3 class="card__title">Chapter {{ page.extra.number }} — {{ page.title }}</h3>
+          {% if page.description %}<p>{{ page.description }}</p>{% endif %}
+          <a class="card__link" href="{{ page.permalink | safe }}">Read chapter {{ page.extra.number }} →</a>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section section--muted" aria-labelledby="coming-heading">
+  <div class="container">
+    <h2 id="coming-heading" class="section__title">In preparation</h2>
+    <p class="section__lead">
+      The tutorial is being converted, part by part, from a 21-day research
+      study (21 days, 22 figures, every claim asserted in code). Still to come:
+    </p>
+    <div class="community">
+      <div class="community__item"><span class="community__name">Part II — Counting curves</span><span class="community__meta">Floor diagrams; the 12 cubics; genus is cycles</span></div>
+      <div class="community__item"><span class="community__name">Part III — Interlude for programmers</span><span class="community__meta">Shortest paths are matrix multiplication</span></div>
+      <div class="community__item"><span class="community__name">Part IV — Matroids &amp; Hodge theory</span><span class="community__meta">Bergman fans; the Chow ring; Huh's log-concavity</span></div>
+      <div class="community__item"><span class="community__name">Part V — Moduli &amp; tree space</span><span class="community__meta">The Grassmannian is a line; the Petersen graph is a moduli space</span></div>
+      <div class="community__item"><span class="community__name">Part VI — Chip-firing &amp; Jacobians</span><span class="community__meta">Sandpile groups; trees are invisible</span></div>
+      <div class="community__item"><span class="community__name">Parts VII–VIII — Deep dives &amp; open problems</span><span class="community__meta">The defect ledger; the Vámós matroid; Dhar burning</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="agents-heading">
+  <div class="container prose">
+    <h2 id="agents-heading" class="section__title">For agents: serve the source</h2>
+    <p>
+      This site is built from Markdown, so it serves Markdown. Any page
+      requested with an explicit <code>Accept: text/markdown</code> header
+      returns its raw source — no HTML chrome, no conversion. Humans get the
+      page; agents get the document.
+    </p>
+    <pre><code>curl -H 'Accept: text/markdown' https://minplus.xyz/chapters/chapter-01/</code></pre>
+  </div>
+</section>
+{% endblock content %}

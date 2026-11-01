@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}{{ section.title }} · {{ config.title }}{% endblock title %}
+{% block description %}All chapters of Learn You a Tropical Geometry for Great Good! — Part I is published; Parts II–VIII are in preparation.{% endblock description %}
+{% block og_title %}{{ section.title }} · {{ config.title }}{% endblock og_title %}
+{% block og_description %}All chapters of Learn You a Tropical Geometry for Great Good!{% endblock og_description %}
+
+{% block content %}
+<section class="section">
+  <div class="container prose">
+    <header class="page-header">
+      <h1 class="page-header__title">{{ section.title }}</h1>
+      <p class="page-header__lead">Part I — Curves, tropicalised. Read in order; each chapter's program checks its own claims.</p>
+    </header>
+    <ul class="post-list">
+      {% for page in section.pages %}
+      <li class="post-list__item">
+        <article>
+          <h2 class="post-list__title"><a href="{{ page.permalink | safe }}">Chapter {{ page.extra.number }} — {{ page.title }}</a></h2>
+          <p class="post-meta">
+            {%- if page.reading_time %}{{ page.reading_time }} min read{% endif %}
+          </p>
+          {% if page.description %}<p>{{ page.description }}</p>{% endif %}
+        </article>
+      </li>
+      {% endfor %}
+    </ul>
+    <p><em>Parts II–VIII are in preparation — see the <a href="/">home page</a> for the full outline.</em></p>
+  </div>
+</section>
+{% endblock content %}
