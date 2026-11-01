@@ -33,6 +33,13 @@ points. Evaluate all three terms at each:
 | x = 0 | `2x = 0` | (0, 1, 0) | **yes** |
 | x = −1 | `x + 1 = 0` | (−2, 0, 0) | no — min −2 attained *once* |
 
+![The min-graph of 2x, x + 1, and 0, with the three candidates marked](figures/ch02-roots-graph.svg)
+
+*The table, drawn. The black envelope is the polynomial; the dashed
+line, `x + 1`, never touches it — that is the missing root, hiding.
+The two red crosses are candidates where the minimum is attained
+only once.*
+
 Only **x = 0** is a root. But this is a degree-2 polynomial! The
 classical fundamental theorem of algebra promises two roots, counted
 with multiplicity. Is the tropical version just… lying?
@@ -82,6 +89,13 @@ Same picture, different curve: the tripod, *counted twice*. Tropical
 geometry refuses to forget multiplicity, and weights are how it
 remembers. Keep them in your pocket — a famous counting theorem in
 Part II is basically bookkeeping of exactly these numbers.
+
+![Lattice length as primitive steps, and the doubled tripod balancing at weight 2](figures/ch02-weights.svg)
+
+*Left: lattice length counts primitive steps — (0,0) to (2,0) passes
+through a lattice point, so it has length 2; (0,0) to (1,1) is
+already primitive. Right: the doubled tripod's pulls, each twice as
+strong, still cancelling to zero.*
 
 ## 2.3 The degenerate conic: a doubled line
 
@@ -149,6 +163,16 @@ tile the area-2 triangle):
 
 Each face's vertex is where its three terms tie for the *global*
 minimum — the chapter's program checks that, exactly, for all four.
+
+![The six lattice points lifted by their coefficients, with the lower hull facets shaded and the subdivision projected below](figures/ch02-lifting.svg)
+
+*Why "subdivision" is the right word. Lift each lattice point to the
+height of its coefficient — the centre bumped to c(1,1) = 5/2,
+circled — and take the lower hull: its four facets, projected
+straight down, are exactly the four triangles in the table above.
+Without the bump, (1,1) would sit at height 2, coplanar with (0,0),
+(1,0) and (0,1) on the plane `z = x + y`, and one facet would be a
+quadrilateral instead — the four-way tie the text warns about.*
 
 ## 2.5 Anatomy of the smooth conic
 
@@ -345,7 +369,12 @@ study — code `hidden_files/code/day01_tropical_conic.py` (run log
 `hidden_files/day01-run.log`), figures
 `files/figures/day01-degenerate-conic.png` and
 `day01-smooth-conic.png`, study log Day 1 entry. The code in §2.8 was
-executed and passed on 2026-10-30.*
+executed and passed on 2026-10-30. The three extra figures (the roots
+graph, the weights diagram, the lifting) were added 2026-11-01: code
+`hidden_files/code/ch02_ch03_extra_figures.py`, asserted the same way —
+the candidate table, the lattice lengths, and that the computed lower
+hull is exactly the four faces tabulated in §2.4 are all checked in
+code before anything is drawn.*
 
 ## Chapter code
 

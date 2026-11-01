@@ -115,6 +115,14 @@ each interior lattice point contributes its star, and the star
 dualises to a cycle. One interior point, one cycle. This is
 Chapter 2's genus formula with its sleeves rolled up.
 
+![Leaf-stripping the cubic's bounded graph: three degree-1 corners struck through, then the surviving 6-cycle](figures/ch03-leaf-stripping.svg)
+
+*Stripping, drawn. Left: the bounded graph, with its three degree-1
+corner vertices crossed out — everything else has degree 2 or 3.
+Right: one pass later nothing else can fall (every survivor has
+degree exactly 2), and what remains is the ring, measured:
+`L = 4 + 2√2`.*
+
 Even the cycle's size is computable, edge by edge from the vertex
 coordinates: four edges of length 1 and two of length √2, total
 
@@ -138,6 +146,15 @@ deflated onto its core circle, with trees where the rest of the
 surface used to hang. That's not just a metaphor in this book's later
 chapters; Part VI does divisor theory on the graph itself and
 recovers the elliptic curve's group law as *rotation of the cycle*.
+
+![The classical cubic y squared equals x cubed minus x: an oval and an unbounded branch](figures/ch03-classical-postcard.svg)
+
+*The postcard itself: `y² = x³ − x`, the classical smooth cubic in
+the real plane — a closed oval plus an unbounded branch, two
+components you can see, one torus you can't (the rest of it lives in
+the complex points). Its genus is 1 by adjunction; the tropical
+cubic's is 1 by counting a cycle. The deflated donut kept the number
+that matters.*
 
 ## 3.5 The whole chapter, as a program
 
@@ -284,7 +301,13 @@ study — code `hidden_files/code/day02_tropical_cubic.py` (run log
 `files/figures/day02-tropical-cubic.png`, study log Day 2 entry. The
 full Day 2 program was re-run end-to-end on 2026-10-30 while drafting
 (all checks passed); the compact code in §3.5 was executed separately
-and passed the same day.*
+and passed the same day. The two extra figures (leaf-stripping, the
+classical postcard) were added 2026-11-01: code
+`hidden_files/code/ch02_ch03_extra_figures.py` — the strip is computed,
+not drawn by hand: the survivors are asserted to be exactly the six
+faces containing (1,1), 2-regular, with edge lengths
+{1, 1, 1, 1, √2, √2} summing to 4 + 2√2, and the postcard's curve is
+asserted smooth (discriminant 64 ≠ 0) before rendering.*
 
 ## Chapter code
 
