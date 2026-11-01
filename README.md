@@ -32,33 +32,48 @@ zola check     # validate internal links & markup
 
 ## Deploy — Cloudflare Pages
 
-| Setting          | Value           |
-| ---------------- | --------------- |
-| Framework preset | None            |
-| Build command    | `npm run build` |
-| Build output dir | `public`        |
-| Root directory   | `/`             |
+The Pages project (`minplus-site`, production branch `master`) is a
+**direct-upload** project: deploys are pushes of the prebuilt `public/`,
+not Cloudflare builds. That keeps the exact local build (Zola +
+serve-the-source) as what ships.
 
-**The build command must be `npm run build`, not `zola build`.** Plain
+From this repo, with the Cloudflare connector helper
+(`~/workspace/custom-connectors/custom.cloudflare/bin/cf.py`):
+
+```sh
+npm run build   # zola build + serve-the-source into ./public
+python3 ~/workspace/custom-connectors/custom.cloudflare/bin/cf.py \
+  pages-deploy <account-id> minplus-site public master \
+  functions/_middleware.js
+```
+
+The helper follows wrangler's upload protocol (upload-token,
+check-missing, assets/upload, upsert-hashes, then a manifest-only
+deployment) and adapts `functions/_middleware.js` into an advanced-mode
+`_worker.js` for the deployment, so the Accept negotiation works the
+same as it does in a git-connected build.
+
+**The build must be `npm run build`, not `zola build`.** Plain
 `zola build` deploys a site that looks fine, but it writes no `index.md`
-files, so `functions/_middleware.js` has nothing to serve and agents asking
-for `text/markdown` silently get HTML. Check after a deploy:
+files, so the middleware has nothing to serve and agents asking for
+`text/markdown` silently get HTML. Check after a deploy:
 `curl -sI -H 'Accept: text/markdown' https://minplus.xyz/chapters/chapter-01/`
 should say `content-type: text/markdown`.
 
-**Pin the Zola version** — add an environment variable (Settings →
-Environment variables, Production **and** Preview):
-
-```
-ZOLA_VERSION = 0.22.1
-```
+If the project is ever switched to git-connected builds instead, the
+settings are: framework preset none, build command `npm run build`,
+output dir `public`, and a `ZOLA_VERSION = 0.22.1` environment variable
+for Production **and** Preview (the build image's default Zola is older).
 
 ## Domains
 
-- **`minplus.xyz`** (apex) — the canonical domain.
-- **`minpl.us`** — redirect to the canonical `minplus.xyz` (301), set up
-  as a custom domain / redirect rule in Cloudflare, so SEO and links
-  consolidate on one host.
+- **`minplus.xyz`** (apex) and **`www.minplus.xyz`** — attached to the
+  Pages project; the zone's apex and `www` CNAMEs point at
+  `minplus-site.pages.dev` (proxied). Live once the zone is active
+  (registrar nameservers delegated to Cloudflare).
+- **`minpl.us`** — planned 301 redirect to the canonical `minplus.xyz`,
+  either as its own Cloudflare zone with a redirect rule or as registrar
+  URL forwarding, so SEO and links consolidate on one host.
 
 ## License
 
