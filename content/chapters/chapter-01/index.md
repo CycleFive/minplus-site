@@ -30,9 +30,11 @@ combinatorial things. And — this is the part that makes the whole book
 possible — *you can compute all of it*, with short programs, and check
 every claim as you go.
 
-No algebraic geometry is assumed. If you know what a polynomial is and
-you've seen a coordinate plane, you have the prerequisites. Let's break
-arithmetic.
+In this book we are entering a new world of Mathematics not unlike our own, it follows the same rules, the same underlying assumptions, yet it will seem bizarre, new, and different. This is expected so don't worry if you haven't seen a symbol before or things behave differently than you're used to, keep your mind open and pattern match from theory to examples and don't get caught up if you don't get something the first time through, keep going, work the examples and run the code and come back to it.
+
+> **What this book assumes.** Three things, no more. You can read a program — Python-flavoured, but any language will do; the chapters' claims live in the code, and reading it *is* reading the proofs. You remember school algebra and the coordinate plane: polynomials, exponents, slopes, fractions. And you enjoy a good definition — this book's whole method is to define something strange and poke it with examples until it confesses. Everything else — groups, fans, matroids, moduli — gets built out of small numbers first, when we need it. If the water ever deepens, we'll say so at the edge.
+
+Let's break arithmetic.
 
 ## 1.1 Two new operations, zero new numbers
 
