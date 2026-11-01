@@ -24,7 +24,7 @@
         {% if page.lower %}<a href="{{ page.lower.permalink | safe }}">← Chapter {{ page.lower.extra.number }} — {{ page.lower.title }}</a>{% else %}<span></span>{% endif %}
         {% if page.higher %}<a href="{{ page.higher.permalink | safe }}">Chapter {{ page.higher.extra.number }} — {{ page.higher.title }} →</a>{% endif %}
       </nav>
-      <p><a href="/chapters/">← All chapters</a></p>
+      <p><a href="{{ page.permalink | safe }}print/">Print edition — wide margins for handwritten notes</a> · <a href="/chapters/">← All chapters</a></p>
     </footer>
   </div>
 </article>

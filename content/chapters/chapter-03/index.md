@@ -158,81 +158,7 @@ that matters.*
 
 ## 3.5 The whole chapter, as a program
 
-```python
-from fractions import Fraction as F
-from itertools import combinations
-import math
-
-PTS = [(0,0), (1,0), (2,0), (3,0), (0,1), (1,1), (2,1), (0,2), (1,2), (0,3)]
-C = {p: p[0]**2 + p[1]**2 + p[0]*p[1] for p in PTS}   # heights i^2+j^2+ij
-def val(p, x, y): return C[p] + p[0]*x + p[1]*y
-
-# the regular triangulation (computed from the lower hull in the full program)
-FACES = [{(0,0),(1,0),(0,1)}, {(2,0),(3,0),(2,1)}, {(0,2),(1,2),(0,3)},
-         {(1,0),(2,0),(1,1)}, {(1,0),(0,1),(1,1)}, {(2,0),(1,1),(2,1)},
-         {(1,1),(2,1),(1,2)}, {(1,1),(0,2),(1,2)}, {(0,1),(1,1),(0,2)}]
-VERTS = [(-1,-1), (-5,-3), (-3,-5), (-3,-2), (-2,-2),
-         (-4,-3), (-4,-4), (-3,-4), (-2,-3)]
-
-def area2(face):
-    (x1,y1),(x2,y2),(x3,y3) = sorted(face)
-    return abs(x1*(y2-y3) + x2*(y3-y1) + x3*(y1-y2))
-for face, (x, y) in zip(FACES, VERTS):
-    assert area2(face) == 1                            # unit triangles
-    vals = {p: val(p, F(x), F(y)) for p in PTS}
-    m = min(vals.values())
-    assert {p for p, v in vals.items() if v == m} == face
-assert sum(area2(f) for f in FACES) == 9               # tiles area-9/2 triangle
-
-# bounded edges = subdivision edges shared by two faces; rays dual to the rest
-bounded, boundary = [], 0
-all_edges = {}
-for a, b in combinations(range(9), 2):
-    shared = FACES[a] & FACES[b]
-    if len(shared) == 2:
-        bounded.append((a, b))
-for f in FACES:
-    for e in combinations(sorted(f), 2):
-        all_edges[e] = all_edges.get(e, 0) + 1
-boundary = sum(1 for n in all_edges.values() if n == 1)
-assert len(bounded) == 9 and boundary == 9             # 9 bounded, 9 rays
-
-# leaf-strip the bounded graph: trees fall off, the cycle remains
-adj = {i: set() for i in range(9)}
-for a, b in bounded:
-    adj[a].add(b); adj[b].add(a)
-rem = {v: set(n) for v, n in adj.items()}
-changed = True
-while changed:
-    changed = False
-    for v in [v for v, n in rem.items() if len(n) == 1]:
-        (u,) = rem[v]; rem[u].discard(v); del rem[v]; changed = True
-cycle = set(rem)
-star = {i for i, f in enumerate(FACES) if (1, 1) in f}
-assert cycle == star and len(cycle) == 6               # cycle = star of (1,1)
-assert all(len(n) == 2 for n in rem.values())          # 2-regular: one cycle
-cyc_len = sum(math.dist(VERTS[a], VERTS[b]) for a, b in bounded if a in cycle and b in cycle)
-assert abs(cyc_len - (4 + 2*math.sqrt(2))) < 1e-9, cyc_len
-
-genus = len(bounded) - len(FACES) + 1
-interior = [p for p in PTS if p[0] > 0 and p[1] > 0 and sum(p) < 3]
-assert genus == 1 and interior == [(1, 1)]
-print(f"Chapter 3: all assertions pass. Genus: {genus} | cycle length: {cyc_len:.3f}")
-```
-
-```
-Chapter 3: all assertions pass. Genus: 1 | cycle length: 6.828
-```
-
-> **Honest Box — what this program checks.** As in Chapter 2, the
-> compact program lists the triangulation and verifies everything
-> downstream, exactly: unit areas, tiling, global ties at all 9
-> vertices, edge counts, the leaf-stripping, cycle = star, cycle
-> length, genus. The triangulation itself (lower hull via `ConvexHull`),
-> balancing at all 9 vertices, the bridge checks, and the mask
-> inference of the 9 rays are asserted in the full program
-> (`ch03_tropical_cubic.py`, the study's Day 2 code) — which was
-> re-run end-to-end while this chapter was being written, and passed.
+Everything in this chapter is one runnable program: [ch03_tropical_cubic.py](./ch03_tropical_cubic.py). The assertions *are* the chapter's claims — run it, and if it prints its final line, the cubic is what we said it is. (This section used to print the listing inline; a screenful of code you can download is just a download with extra scrolling.)
 
 ## 3.6 Try It
 
@@ -300,7 +226,7 @@ study — code `hidden_files/code/day02_tropical_cubic.py` (run log
 `hidden_files/day02-run.log`), figure
 `files/figures/day02-tropical-cubic.png`, study log Day 2 entry. The
 full Day 2 program was re-run end-to-end on 2026-10-30 while drafting
-(all checks passed); the compact code in §3.5 was executed separately
+(all checks passed); the chapter program (§3.5) was executed separately
 and passed the same day. The two extra figures (leaf-stripping, the
 classical postcard) were added 2026-11-01: code
 `hidden_files/code/ch02_ch03_extra_figures.py` — the strip is computed,
@@ -311,4 +237,4 @@ asserted smooth (discriminant 64 ≠ 0) before rendering.*
 
 ## Chapter code
 
-The full program behind this chapter, as a download: [ch03_tropical_cubic.py](./ch03_tropical_cubic.py). The inline listing in the chapter is the compact, self-checking version.
+The full program behind this chapter, as a download: [ch03_tropical_cubic.py](./ch03_tropical_cubic.py) — the same file §3.5 points at. Its assertions are the chapter's claims; run it.

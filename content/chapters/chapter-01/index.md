@@ -235,58 +235,7 @@ it a curve, the receipt is a balancing sum that comes out to zero.
 
 ## 1.5 The whole chapter, as a program
 
-Here is everything above, as runnable Python. The assertions *are* the
-chapter's claims — run it, and if it prints the final line, the tropical
-line is what we said it is.
-
-```python
-INF = float("inf")
-
-def tadd(a, b): return min(a, b)   # tropical addition
-def tmul(a, b): return a + b       # tropical multiplication
-
-assert tadd(3, 7) == 3
-assert tmul(3, 7) == 10
-assert tadd(5, 5) == 5             # idempotent: a (+) a = a
-assert tmul(0, 9) == 9             # 0 is the tropical multiplicative identity
-assert tadd(INF, 9) == 9           # INF is the tropical additive identity
-
-def terms(x, y): return (x, y, 0)  # the three terms of min(x, y, 0)
-
-def on_curve(x, y):
-    vals = terms(x, y)
-    return vals.count(min(vals)) >= 2
-
-for p in [(0, 2), (3, 0), (-2, -2), (0, 0)]:
-    assert on_curve(*p), p         # one point on each ray, plus the vertex
-for p in [(1, 1), (-1, 1), (1, -1), (2, -3)]:
-    assert not on_curve(*p), p     # one winner only -> not on the curve
-
-rays = [(0, 1), (1, 0), (-1, -1)]
-bal = (sum(r[0] for r in rays), sum(r[1] for r in rays))
-assert bal == (0, 0), bal           # balancing
-
-print("Chapter 1: all assertions pass. Balancing sum:", bal)
-```
-
-```
-Chapter 1: all assertions pass. Balancing sum: (0, 0)
-```
-
-(The full plotting program that draws Figure 1.1 — grid, tie-mask, Newton
-polygon, colour-matched dual edges — ships with the chapter as
-`ch01_tropical_line.py`. It's the study's Day 0 program, lightly renamed.)
-
-> **Honest Box — what this program does and doesn't prove.** The tie
-> checks and the balancing sum are exact. But the ray directions in the
-> code are the ones we *derived by hand*; the program sums those, it
-> doesn't extract them from the picture. Inferring the rays from the
-> plotted mask alone — no hand-fed answers — is a stricter test, and
-> it's a real exercise in the study this book is built from. It gets
-> closed in Chapter 2, where the rays are recovered from the bitmap and
-> balance *still* comes out to (0, 0). We tell you this now because the
-> house rule of this book is: a check is only worth what it actually
-> checks.
+Everything in this chapter is one runnable program: [ch01_tropical_line.py](./ch01_tropical_line.py). The assertions *are* the chapter's claims — run it, and if it prints its final line, the tropical line is what we said it is. (This section used to print the listing inline; a screenful of code you can download is just a download with extra scrolling.)
 
 ## 1.6 Try It
 
@@ -344,7 +293,7 @@ is the genus: *where's the cycle?*
 *Source & provenance: this chapter converts Day 0 (2026-10-10) of the
 tropical geometry study — code `hidden_files/code/day00_tropical_line.py`,
 figure `files/figures/day00-tropical-line.png`, study log Day 0 entry.
-All code in §1.5 was executed and passed on 2026-10-30; one assertion in
+The chapter program (§1.5) was executed and passed on 2026-10-30; one assertion in
 an early draft of the Try It answers was caught by that run (the
 southwest ray of `min(x, y, 1)` does pass through the origin) and the
 answer above is the corrected one. The three extra figures (the
@@ -355,4 +304,4 @@ balancing sum are all checked in code before anything is drawn.*
 
 ## Chapter code
 
-The full program behind this chapter, as a download: [ch01_tropical_line.py](./ch01_tropical_line.py). The inline listing in the chapter is the compact, self-checking version.
+The full program behind this chapter, as a download: [ch01_tropical_line.py](./ch01_tropical_line.py) — the same file §1.5 points at. Its assertions are the chapter's claims; run it.

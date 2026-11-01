@@ -65,6 +65,36 @@ settings are: framework preset none, build command `npm run build`,
 output dir `public`, and a `ZOLA_VERSION = 0.22.1` environment variable
 for Production **and** Preview (the build image's default Zola is older).
 
+## Marginalia (margin notes + print editions)
+
+Chapters carry a handwriting-friendly layer, built by `tools/marginalia.py`
+(the last step of `npm run build`):
+
+- **Anchors.** Every top-level paragraph of a chapter is numbered within its
+  section and stamped with an id (`s1-3-p2`) and a label (`§1.3 ¶2`).
+- **Print edition.** Each chapter gets a `print/` page: Letter paper, a wide
+  right margin for handwriting, anchor labels visible in the left margin.
+  Print it, scribble the marginal notes you would make anyway as a reader,
+  scan/photograph the pages.
+- **Digitising.** Transcriptions go into the chapter bundle's
+  `annotations.json`:
+
+  ```json
+  {"chapter": 1, "notes": [
+    {"anchor": "s1-3-p2", "text": "the note, transcribed",
+     "ink": "ink/note-01.png"}]}
+  ```
+
+  `ink` is an optional cropped image of the actual handwriting, kept beside
+  the transcription (the build injects notes as real HTML — selectable,
+  copyable, searchable — behind a CSS-only "author's margin notes" toggle;
+  no JS). Ink images are binary, so they deploy with the site but are not
+  part of the text-only GitHub snapshot push.
+
+House rule (2026-11-01): chapter prose never dumps the full program inline.
+The "whole chapter, as a program" section points at the downloadable `.py`
+in the chapter bundle; the assertions in that file are the chapter's claims.
+
 ## Domains
 
 - **`minplus.xyz`** (apex) and **`www.minplus.xyz`** — attached to the

@@ -246,74 +246,7 @@ pixels. The picture now testifies on its own behalf.
 
 ## 2.8 The whole chapter, as a program
 
-```python
-from fractions import Fraction as F
-
-# --- warm-up: tropical roots of min(2x, x+1, 0) ---
-def wvals(x): return (2*x, x+1, 0)
-roots = []
-for cand in [F(1), F(0), F(-1)]:       # the three pairwise tie points
-    v = wvals(cand)
-    if v.count(min(v)) >= 2:
-        roots.append(cand)
-assert roots == [F(0)], roots          # only x=0 is a root
-# multiplicity: slope of the min-graph jumps 2 -> 0 at x=0, a jump of 2
-assert 2 - 0 == 2
-
-# --- the degenerate conic: all coefficients 0 ---
-rays_w = [((0, 1), 2), ((1, 0), 2), ((-1, -1), 2)]  # (direction, weight)
-bal = (sum(w*d[0] for d, w in rays_w), sum(w*d[1] for d, w in rays_w))
-assert bal == (0, 0), bal              # weighted balancing: sum w_i v_i = 0
-
-# --- the smooth conic: heights c(i,j)=i^2+j^2, c(1,1) bumped 2 -> 5/2 ---
-PTS = [(0,0), (1,0), (2,0), (0,1), (1,1), (0,2)]
-C = {(0,0): F(0), (1,0): F(1), (2,0): F(4),
-     (0,1): F(1), (1,1): F(5,2), (0,2): F(4)}
-def val(p, x, y): return C[p] + p[0]*x + p[1]*y
-
-FACES = [{(0,0), (1,0), (0,1)}, {(1,0), (2,0), (1,1)},
-         {(0,1), (0,2), (1,1)}, {(1,0), (0,1), (1,1)}]
-VERTS = [(F(-1), F(-1)), (F(-3), F(-3,2)), (F(-3,2), F(-3)), (F(-3,2), F(-3,2))]
-
-def area2(face):
-    (x1,y1),(x2,y2),(x3,y3) = sorted(face)
-    return abs(x1*(y2-y3) + x2*(y3-y1) + x3*(y1-y2))
-for face, (x, y) in zip(FACES, VERTS):
-    assert area2(face) == 1                       # unit triangle (area 1/2)
-    vals = {p: val(p, x, y) for p in PTS}
-    m = min(vals.values())
-    assert {p for p, v in vals.items() if v == m} == face  # face ties, globally
-# the 4 unit triangles exactly tile the degree-2 triangle (area 2)
-assert sum(area2(f) for f in FACES) == 4           # in doubled-area units: 2*2
-
-# bounded edges = subdivision edges shared by two faces
-from itertools import combinations
-bounded = []
-for a, b in combinations(range(4), 2):
-    shared = FACES[a] & FACES[b]
-    if len(shared) == 2:
-        bounded.append((a, b))
-assert sorted(bounded) == [(0, 3), (1, 3), (2, 3)]  # a star: a tree
-genus = len(bounded) - len(FACES) + 1
-assert genus == 0
-interior = [p for p in PTS if p[0] > 0 and p[1] > 0 and sum(p) < 2]
-assert interior == []                              # no interior lattice points
-print("Chapter 2: all assertions pass. Weighted balancing:", bal, "| genus:", genus)
-```
-
-```
-Chapter 2: all assertions pass. Weighted balancing: (0, 0) | genus: 0
-```
-
-> **Honest Box — what this program checks.** The compact program takes
-> the subdivision (the four faces) as given and verifies everything
-> downstream exactly: unit areas, tiling, the global tie at each dual
-> vertex, the bounded-edge structure, genus, weighted balancing of the
-> degenerate conic. The subdivision *itself* — lower hull of the
-> lifted points, via `scipy`'s `ConvexHull` — plus balancing at all
-> four vertices and the mask inference of §2.7, are in the full
-> program (`ch02_tropical_conic.py`, the study's Day 1 code), which
-> asserts them all.
+Everything in this chapter is one runnable program: [ch02_tropical_conic.py](./ch02_tropical_conic.py). The assertions *are* the chapter's claims — run it, and if it prints its final line, the conics are what we said they are. (This section used to print the listing inline; a screenful of code you can download is just a download with extra scrolling.)
 
 ## 2.9 Try It
 
@@ -368,7 +301,7 @@ hold water.
 study — code `hidden_files/code/day01_tropical_conic.py` (run log
 `hidden_files/day01-run.log`), figures
 `files/figures/day01-degenerate-conic.png` and
-`day01-smooth-conic.png`, study log Day 1 entry. The code in §2.8 was
+`day01-smooth-conic.png`, study log Day 1 entry. The chapter program (§2.8) was
 executed and passed on 2026-10-30. The three extra figures (the roots
 graph, the weights diagram, the lifting) were added 2026-11-01: code
 `hidden_files/code/ch02_ch03_extra_figures.py`, asserted the same way —
@@ -378,4 +311,4 @@ code before anything is drawn.*
 
 ## Chapter code
 
-The full program behind this chapter, as a download: [ch02_tropical_conic.py](./ch02_tropical_conic.py). The inline listing in the chapter is the compact, self-checking version.
+The full program behind this chapter, as a download: [ch02_tropical_conic.py](./ch02_tropical_conic.py) — the same file §2.8 points at. Its assertions are the chapter's claims; run it.

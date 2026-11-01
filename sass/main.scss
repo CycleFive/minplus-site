@@ -342,3 +342,42 @@ img { max-width: 100%; height: auto; display: block; }
 
 /* --- minplus-site additions: chapter navigation --- */
 .chapter-nav { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin: 2rem 0 1rem; }
+
+// ---- Marginalia: paragraph anchors, margin notes, toggle -----------------
+.para-anchor { display: none; }  // visible only in the print edition
+
+.margin-toggle { position: absolute; opacity: 0; pointer-events: none; }
+.margin-toggle-label {
+  display: inline-block; cursor: pointer; user-select: none;
+  font-family: var(--font-mono); font-size: .8rem; color: var(--accent-ink);
+  border: 1px solid var(--line); border-radius: 999px;
+  padding: .3rem .8rem; margin-bottom: 1.5rem; background: var(--surface);
+}
+.margin-toggle-label:hover { border-color: var(--accent); }
+.margin-toggle:checked + .margin-toggle-label {
+  background: var(--accent); color: #fff; border-color: var(--accent);
+}
+
+.margin-note { display: none; }
+.margin-toggle:checked ~ .margin-note {
+  display: block; margin: 0 0 1.2rem; padding: .7rem .9rem;
+  background: var(--surface); border: 1px solid var(--line);
+  border-left: 3px solid var(--accent); border-radius: var(--radius-sm);
+  font-size: .92rem;
+}
+.margin-note__anchor {
+  display: block; font-family: var(--font-mono); font-size: .72rem;
+  color: var(--muted); margin-bottom: .3rem;
+}
+.margin-note__text { margin: 0; font-style: italic; color: var(--ink); }
+.margin-note__ink {
+  margin-top: .5rem; border: 1px solid var(--line);
+  border-radius: var(--radius-sm); background: #fff;
+}
+
+@media (min-width: 1100px) {
+  .margin-toggle:checked ~ .margin-note {
+    float: right; clear: right; width: 250px; margin-right: -285px;
+    margin-bottom: .6rem;
+  }
+}
