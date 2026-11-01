@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}{{ section.title }} · {{ config.title }}{% endblock title %}
-{% block description %}All chapters of Learn You a Tropical Geometry for Great Good! — Part I is published; Parts II–VIII are in preparation.{% endblock description %}
+{% block description %}All chapters of Learn You a Tropical Geometry for Great Good! — Part I is published and Part II is under way; Parts III–VIII are in preparation.{% endblock description %}
 {% block og_title %}{{ section.title }} · {{ config.title }}{% endblock og_title %}
 {% block og_description %}All chapters of Learn You a Tropical Geometry for Great Good!{% endblock og_description %}
 
@@ -10,7 +10,7 @@
   <div class="container prose">
     <header class="page-header">
       <h1 class="page-header__title">{{ section.title }}</h1>
-      <p class="page-header__lead">Part I — Curves, tropicalised. Read in order; each chapter's program checks its own claims.</p>
+      <p class="page-header__lead">Part I — Curves, tropicalised — is complete; Part II — Counting curves — is under way. Read in order; each chapter's program checks its own claims.</p>
     </header>
     <ul class="post-list">
       {% for page in section.pages %}
@@ -25,7 +25,7 @@
       </li>
       {% endfor %}
     </ul>
-    <p><em>Parts II–VIII are in preparation — see the <a href="/">home page</a> for the full outline.</em></p>
+    <p><em>Parts III–VIII are in preparation — see the <a href="/">home page</a> for the full outline.</em></p>
   </div>
 </section>
 {% endblock content %}

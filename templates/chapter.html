@@ -9,7 +9,7 @@
 <article class="section">
   <div class="container prose post">
     <header class="page-header">
-      <p class="hero__eyebrow">Chapter {{ page.extra.number }} · Part I — Curves, tropicalised</p>
+      <p class="hero__eyebrow">Chapter {{ page.extra.number }} · {% if page.extra.part %}{{ page.extra.part }}{% else %}Part I — Curves, tropicalised{% endif %}</p>
       <h1 class="page-header__title">{{ page.title }}</h1>
       {% if page.extra.lead %}
       <p class="page-header__lead">{{ page.extra.lead }}</p>
