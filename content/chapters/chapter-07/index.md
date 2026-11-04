@@ -102,7 +102,10 @@ decorative. Panel A of Figure 7.2 draws the four columns.
 Powers of `B` become exactly periodic after a transient:
 `B^{⊗(k+3)} = B^{⊗k}` for all `k` in `[12, 33]`, and period 1 fails.
 The period is 3 because the critical cycle has length 3 — in
-general the period is the gcd of the critical cycle lengths. Panel D
+general, take the gcd of the critical cycle lengths within each
+strongly connected component of the critical graph, then the lcm
+across components; here there is one component and one critical
+cycle, so the period is just 3. Panel D
 of Figure 7.1 traces three entries: some are periodic from `k = 1`,
 one settles only at the transient, but from `k = 12` the whole
 matrix repeats every 3 steps, forever. A linear dynamical system
@@ -185,8 +188,10 @@ Everything in this chapter is one runnable program: [ch07_tropical_linear_algebr
   linear algebra read three ways.
 - **The eigenvalue lives on the cycles.** `λ` is not found by
   solving anything; it is the cheapest cycle mean, its eigenvectors
-  hang off the critical cycle alone, and the gcd of the critical
-  cycle lengths is the eventual period of the dynamics.
+  hang off the critical cycle alone, and the eventual period is
+  the gcd of the critical cycle lengths within each strongly
+  connected component of the critical graph, combined by lcm across
+  components (here: one component, one cycle, period 3).
 - **Tropical scaling is real scaling.** Eigenvectors are unique only
   up to adding a constant — and here that is the whole story: three
   critical columns, one ray.

@@ -39,8 +39,11 @@ Chapter claims asserted below:
     eigenspace here is a single tropical ray. A non-critical column
     (to node 4) is NOT an eigenvector: criticality is essential.
   * Cyclicity: powers of B become exactly periodic with period 3
-    (= gcd of the critical cycle lengths) after transient T = 12:
-    B^(k+3) = B^k for all k in [12, 33], and period 1 fails.
+    after transient T = 12: B^(k+3) = B^k for all k in [12, 33], and
+    period 1 fails. (In general the period is the gcd of the critical
+    cycle lengths within each strongly connected component of the
+    critical graph, combined by lcm across components; here there is
+    one component and one critical cycle.)
   * Tropical determinant (min-plus permanent) = the assignment
     problem: for the seeded 5x5 cost matrix printed below the value
     is 36, by brute force over all 120 permutations and by
@@ -285,7 +288,8 @@ assert transient is not None, "no period-3 regime found up to k=33"
 # and period is exactly 3, not 1, in that regime
 assert not (powers[transient + 1] == powers[transient]).all()
 print(f"[ok] B=A-lambda: powers eventually periodic, period exactly 3 "
-      f"(= gcd of critical cycle lengths), transient T = {transient}: "
+      f"(gcd within its one critical component; in general, gcd "
+      f"within each component, lcm across), transient T = {transient}: "
       f"B^(k+3) = B^k for all k in [{transient}, 33]")
 
 # (Try It, asserted: from T = 12 with period 3, B^20 = B^17 = B^14.)
