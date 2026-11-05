@@ -7,25 +7,29 @@ for Great Good!" Converted from Day 6 of the tropical geometry study
 (2026-10-16). SELF-CONTAINED apart from numpy/scipy.
 
 A matroid M of rank r on E = {0, ..., n-1} IS a tropical linear
-space: its Bergman fan B(M) in R^n / R*1. Three descriptions, from
-three sources, are implemented and proved equal BY COMPUTATION:
+space: its Bergman fan B(M) in R^n / R*1. Three descriptions are
+implemented and proved equal BY COMPUTATION -- exhaustively, over
+every weak order of the ground set (see study()):
 
-  1. Initial matroids (Ardila-Klivans; Fry thesis arXiv:1910.00627):
+  1. Initial matroids (Ardila-Klivans, arXiv:math/0311370):
      B(M) = {w : M^w is loop-free}, M^w = matroid of w-maximal bases.
-  2. Chains of flats (arXiv:1010.3967, max convention): a chain
+  2. Chains of flats (Ardila-Klivans, arXiv:math/0311370): a chain
      empty < F_1 < ... < F_k < E of flats gives the cone generated
      by the indicator vectors e_{F_i}; B(M) is their union mod R*1.
-  3. Circuit tropical hyperplanes (arXiv:1901.06893): w in B(M) iff
-     on every circuit C the minimum of w over C is attained at
-     least twice.
+  3. Circuit tropical hyperplanes (Nakajima, arXiv:1901.06893):
+     w in B(M) iff on every circuit C the minimum of w over C is
+     attained at least twice.
 
-Sign convention (the chapter's Honest Box): the literature splits
-between min-weight/negative-ray and max-weight/positive-ray; they
-are negatives of each other and each description pairs with exactly
-one circuit condition. This program uses max-weight/positive-ray
-throughout, and the pairing it asserts is circuit MIN-twice -- the
-first write-up paired max with max-twice and the assertions killed
-it; the code determines the pairing, not the other way round.
+Sign convention (the chapter's Honest Box): the book is min-plus
+throughout (Chapter 1), and so is this fan -- its circuit condition
+is Chapter 1's own (a minimum attained at least twice) and its rays
+are the positive indicators e_F. The literature splits between min-
+and max-weight conventions, which are negatives of each other, and
+each pairs with exactly one circuit condition. The one place a MAX
+appears in this program is inside description 1: M^w is built from
+maximum-weight bases. That selection pairs with circuit MIN-twice
+-- the first write-up paired it with max-twice and the assertions
+killed it; the code determines the pairing, not the other way round.
 
 Chapter claims asserted below (the table of section 8.2):
   matroid          rank  flats  circuits  rays  dim  2-cones
@@ -34,15 +38,17 @@ Chapter claims asserted below (the table of section 8.2):
   U(3,4)             3     12        1      10    2     12
   U(3,5)             3     17        5      15    2     20
 For every matroid: the fan is pure of dimension r-1; the three
-descriptions agree on 300 random integer weights (150 for U(3,5)),
-and loop-free == circuit-min-twice on 2000 more; the ray count
-equals the number of proper nonempty flats; the rank-2 fans are
-balanced at the origin (ray generators sum to a multiple of 1);
-U(3,4) and U(3,5) are balanced at every ray. The parallel-pair fan
-has the merged ray e_0+e_1 and only 3 rays: the fan remembers the
-matroid. Try It answers asserted too: B(U(2,5)) has 5 rays (its 5
-proper nonempty flats are the singletons; triple agreement checked
-on 100 samples), and dim B(U(3,4)) = r-1 = 2.
+descriptions agree on EVERY weak order of the ground set (75 for
+n=4, 541 for n=5 -- the ordered Bell numbers), each checked at two
+spacings, and exactly len(chains) weak orders lie in the fan, one
+per chain of flats; the ray count equals the number of proper
+nonempty flats; the rank-2 fans are balanced at the origin (ray
+generators sum to a multiple of 1); U(3,4) and U(3,5) are balanced
+at every ray. The parallel-pair fan has the merged ray e_0+e_1 and
+only 3 rays: the fan remembers the matroid. Try It answers asserted
+too: B(U(2,5)) has 5 rays (its 5 proper nonempty flats are the
+singletons; triple agreement checked on all 541 of its weak
+orders), and dim B(U(3,4)) = r-1 = 2.
 
 Running this file writes ch08_summary.json (the data the chapter's
 figures are drawn from) into the current directory.
@@ -217,8 +223,26 @@ def check_balanced_2d(M, chains, rays):
 
 # ------------------------------------------------------------------ main
 
-def study(name, M, n_grid=300, n_pair=2000, seed=0):
-    rng = np.random.default_rng(seed)
+def weak_orders(n):
+    """One representative weight vector per weak order on {0..n-1}.
+
+    A weak order is an ordered partition of the ground set; the
+    representative assigns its parts the level values 0..k-1. Every
+    verdict in this chapter depends only on the weak order of w:
+    the circuit test compares coordinates, the initial matroid is
+    selected by comparisons of basis weights, and cone membership
+    is decided by w's upper level sets. So representatives decide
+    all weights at once -- this is what turns "agreement on
+    samples" into an exhaustive check. Counts are the ordered Bell
+    numbers: 75 for n=4, 541 for n=5."""
+    reps = []
+    for tup in itertools.product(range(n), repeat=n):
+        if set(tup) == set(range(max(tup) + 1)):
+            reps.append(tup)
+    return reps
+
+
+def study(name, M):
     chains = bergman_cones(M)
     flats = M.flats()
     print(f"== {name}: n={M.n} r={M.r}, flats={len(flats)}, "
@@ -227,21 +251,36 @@ def study(name, M, n_grid=300, n_pair=2000, seed=0):
     assert maxlen == M.r - 1, f"not pure of dim r-1: {maxlen} vs {M.r - 1}"
     print(f"   pure of dimension r-1 = {M.r - 1}: OK")
 
-    # triple agreement on random integer weights
-    Ws = rng.integers(-2, 3, size=(n_grid, M.n)).astype(float)
-    for i, w in enumerate(Ws):
-        a = in_bergman_fan(w, M, chains)
-        b = initial_loopless(M, w)
-        c = circuit_min_twice(M, w)
-        assert a == b == c, f"descriptions disagree at {w}: fan={a} loopfree={b} circ={c}"
-    print(f"   fan == M^w-loop-free == circuit-min-twice on {n_grid} samples: OK")
-
-    # pairwise loopfree vs circuit on more samples (cheap)
-    Ws2 = rng.integers(-3, 4, size=(n_pair, M.n)).astype(float)
-    for w in Ws2:
-        assert initial_loopless(M, w) == circuit_min_twice(M, w), \
-            f"loopfree/circuit disagree at {w}"
-    print(f"   loopfree == circuit-min-twice on {n_pair} more samples: OK")
+    # Exhaustive triple agreement: every weak order of the ground
+    # set, each at two spacings (unit gaps 0,1,2,... and widening
+    # gaps 1,3,9,...). Assert (a) the three descriptions agree, and
+    # (b) each description's verdict is the same at both spacings --
+    # the computational content of "the verdicts depend only on the
+    # weak order".
+    reps = weak_orders(M.n)
+    assert len(reps) == {4: 75, 5: 541}[M.n]
+    infan = 0
+    for tup in reps:
+        w1 = np.array(tup, dtype=float)
+        w2 = np.array([3.0 ** t for t in tup])
+        v1 = (in_bergman_fan(w1, M, chains), initial_loopless(M, w1),
+              circuit_min_twice(M, w1))
+        v2 = (in_bergman_fan(w2, M, chains), initial_loopless(M, w2),
+              circuit_min_twice(M, w2))
+        assert v1 == v2, \
+            f"a verdict depends on the spacing at {tup}: {v1} vs {v2}"
+        assert v1[0] == v1[1] == v1[2], \
+            f"descriptions disagree at weak order {tup}: " \
+            f"fan={v1[0]} loopfree={v1[1]} circ={v1[2]}"
+        infan += v1[0]
+    # The weak orders lying in the fan are counted by the chains of
+    # flats: an in-fan order's strict upper level sets form a chain,
+    # and every chain arises this way.
+    assert infan == len(chains), \
+        f"{infan} weak orders in the fan != {len(chains)} chains"
+    print(f"   fan == M^w-loop-free == circuit-min-twice on ALL "
+          f"{len(reps)} weak orders (two spacings each): OK -- "
+          f"{infan} orders lie in the fan, one per chain of flats")
 
     rays = ray_generators(M, chains)
     print(f"   rays ({len(rays)}): {[list(map(int, r)) for r in rays]}")
@@ -280,8 +319,7 @@ if __name__ == "__main__":
     results["parallel-pair"] = study("parallel-pair (0||1)",
                                      Matroid.parallel_pair())
     results["U(3,4)"] = study("U(3,4)", Matroid.uniform(4, 3))
-    results["U(3,5)"] = study("U(3,5)", Matroid.uniform(5, 3),
-                              n_grid=150, seed=1)
+    results["U(3,5)"] = study("U(3,5)", Matroid.uniform(5, 3))
 
     EXPECTED = {
         # name: (flats, circuits, rays, dim, twocones)
@@ -322,8 +360,7 @@ if __name__ == "__main__":
           "cones cone(e_i, e_j)")
 
     # Try It 1, asserted: B(U(2,5)) has 5 rays.
-    M25, chains25, rays25 = study("U(2,5) (Try It)", Matroid.uniform(5, 2),
-                                  n_grid=100, n_pair=500, seed=2)
+    M25, chains25, rays25 = study("U(2,5) (Try It)", Matroid.uniform(5, 2))
     st25 = fan_stats(M25, chains25, rays25)
     assert st25["flats"] == 7 and st25["rays"] == 5
     summary["U(2,5)"] = st25
@@ -334,8 +371,9 @@ if __name__ == "__main__":
         json.dump(summary, f, indent=1)
     print("\nwrote ch08_summary.json")
     print("Chapter 8: ALL ASSERTIONS PASSED -- three descriptions of "
-          "the Bergman fan agree on every sampled weight for U(2,4), "
-          "the parallel pair, U(3,4), U(3,5) (and U(2,5)); every fan "
-          "is pure of dimension r-1 and balanced; the table, the "
-          "parallel-pair merger and the Try It answers are as printed "
-          "in the chapter.")
+          "the Bergman fan agree on every weak order of the ground "
+          "set for U(2,4), the parallel pair, U(3,4), U(3,5) (and "
+          "U(2,5)): all 75 weak orders for n=4, all 541 for n=5, at "
+          "two spacings each; every fan is pure of dimension r-1 and "
+          "balanced; the table, the parallel-pair merger and the "
+          "Try It answers are as printed in the chapter.")
