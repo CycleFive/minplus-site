@@ -35,9 +35,10 @@ generators. Definition: flats. Fan reading: fine.
 
 Chapter claims asserted below, no exceptions:
   * 10 generators, 3 independent (CH1) relations, graded dims
-    (1, 7, 1); deg constant (= -1 pre-normalization, = 1 after) on
-    all 12 maximal-chain monomials; Poincare Gram on A^1 has
-    rank 7 (nondegenerate).
+    (1, 7, 1); deg constant (one nonzero constant pre-normalization
+    -- its value is the nullspace representative's own, = 1 after
+    normalization) on all 12 maximal-chain monomials; Poincare
+    Gram on A^1 has rank 7 (nondegenerate).
   * m = (1, 3, 3) THREE ways: ring intersection numbers; Moebius /
     chi(t) = t^3 - 4t^2 + 6t - 3, chi-bar(t) = t^2 - 3t + 3;
     Bjorner's initial-descending flag count. Log-concavity 3^2 >= 1*3.
@@ -49,6 +50,17 @@ Chapter claims asserted below, no exceptions:
     dim P^1 = 6; -deg(.,.) on P^1 has Sylvester leading minors
     exactly [97/18, 260/9, 925/6, 435, 2133/2, 2430], all > 0, and
     (float, display) eigenvalues [1, 1, 10/3, 9, 9, 9].
+  * Basis check: the Sylvester minors / eigenvalues are asserted
+    to MOVE under a determinant-1 change of the P^1 basis (new
+    minors [32/9, 116/3, 470/3, 237, 540, 2430]; only the
+    determinant, the last minor, survives a det-1 change), while
+    positive-definiteness -- the signature -- stays. The numbers
+    are coordinates; the signature is the invariant.
+  * F7 (Fano plane, no variety): the same machinery on 14 flats
+    asserts graded dims (1, 8, 1), deg constant on all 21 maximal
+    chains, m = (1, 6, 8) by ring and by chi-bar = t^2 - 6t + 8,
+    deg(l^2) > 0, and -deg(.,.) positive definite on the 7-dim
+    primitive space -- signature (1, 7) on A^1.
   * Try It key: (1) 3 independent linear relations in degree 1;
     (2) a degree-2 monomial survives iff its two flats are
     comparable -- maximal ones are the 12 chain monomials;
@@ -199,6 +211,7 @@ print(f"A^2: dim {dimA2}; graded dims (1, 7, 1) with A^0 = Z")
 surviving = [(i, j) for (i, j) in mons if comparable(flats[i], flats[j])]
 killed = [(i, j) for (i, j) in mons if not comparable(flats[i], flats[j])]
 assert len(surviving) + len(killed) == NM
+assert len(surviving) == 22 and len(killed) == 33
 print(f"Try It 2: {len(surviving)} comparable monomials survive (CH2); "
       f"{len(killed)} incomparable ones vanish")
 
@@ -215,11 +228,18 @@ for i in E:
             chains.append(midx[m])
 assert len(chains) == 12, len(chains)
 vals = {d_raw[c] for c in chains}
-assert vals == {Fraction(-1)}, vals  # constant -1 pre-normalization
+# The content is constancy + nonvanishing: deg is unique up to scale,
+# so the raw constant's value (and sign) is the nullspace
+# representative's own choice, not a fact. Assert the fact only.
+assert len(vals) == 1 and vals != {Fraction(0)}, vals
 scale = next(iter(vals))
 d = [v / scale for v in d_raw]
 assert all(d[c] == 1 for c in chains)
-print("deg: constant -1 on all 12 maximal-chain monomials pre-normalization; = 1 after")
+print(f"deg: constant {scale} on all 12 maximal-chain monomials "
+      f"pre-normalization (representative's value); = 1 after")
+# Try It 2, sharpened: every (CH2)-surviving monomial is nonzero in
+# A^2 -- A^2 is 1-dimensional, so deg decides.
+assert all(d[midx[m]] != 0 for m in surviving)
 
 
 def deg_of_poly(poly):
@@ -384,6 +404,32 @@ expected_eigs = [1.0, 1.0, 10.0 / 3.0, 9.0, 9.0, 9.0]
 assert all(abs(e - x) < 1e-9 for e, x in zip(eigs, expected_eigs)), eigs
 print(f"eigenvalues (float, display): {[round(e, 4) for e in eigs]} = [1, 1, 10/3, 9, 9, 9]")
 
+# Basis check: those minors/eigenvalues are coordinates of the form in
+# THIS basis of P^1, not invariants. A determinant-1 change of basis
+# (w0 = v0 + v5, w1 = v1 + v3) moves them; only the determinant (the
+# last minor) survives a det-1 change, and the signature cannot move.
+combos = [{0: 1, 5: 1}, {1: 1, 3: 1}, {2: 1}, {3: 1}, {4: 1}, {5: 1}]
+W = []
+for cvec in combos:
+    wv = [Fraction(0)] * NF
+    for i, cf in cvec.items():
+        for k in range(NF):
+            wv[k] += cf * P1vecs[i][k]
+    W.append(wv)
+G_alt = [[-degprod(u, v) for v in W] for u in W]
+minors_alt = [det([rw[:k] for rw in G_alt[:k]]) for k in range(1, 7)]
+assert minors_alt == [Fraction(32, 9), Fraction(116, 3), Fraction(470, 3),
+                      Fraction(237), Fraction(540), Fraction(2430)], minors_alt
+assert minors_alt[:-1] != minors[:-1] and minors_alt[-1] == minors[-1]
+eigs_alt = sorted(float(v) for v in np.linalg.eigvalsh(
+    np.array([[float(x) for x in rw] for rw in G_alt])))
+assert all(e > 0 for e in eigs_alt)  # still positive definite: signature fixed
+assert any(abs(e - x) > 0.05 for e, x in zip(eigs_alt, expected_eigs))
+print(f"basis check: det-1 change of P^1 basis -> minors "
+      f"{[str(m) for m in minors_alt]}, eigenvalues "
+      f"{[round(e, 4) for e in eigs_alt]} -- numbers moved, "
+      f"signature (all > 0) did not")
+
 # ---------- route 3: Bjorner flag count (Prop 4.3) ----------
 def initial_descending(k):
     count = 0
@@ -411,6 +457,157 @@ assert 4 ** 2 >= 1 * 6
 print("log-concavity: 3^2 = 9 >= 1*3 = 3; Try It 3 key: (1,4,6) needs "
       "the single inequality 4^2 = 16 >= 1*6 = 6 -- and it holds")
 
+# ---------- F7: the same package where no variety exists ----------
+# The Fano plane: 7 points, 7 lines of 3 points (cyclic construction).
+# Realizable only in characteristic 2 -- over no field of char != 2,
+# hence over no C: there is no variety whose cohomology this could be.
+# Same machinery as above, on F7's flats, reusing the generic helpers.
+E7 = tuple(range(7))
+lines7 = [frozenset((i, (i + 1) % 7, (i + 3) % 7)) for i in range(7)]
+assert len(set(lines7)) == 7
+flats7 = [frozenset([i]) for i in E7] + lines7
+NF7 = len(flats7)
+assert NF7 == 14, NF7
+fidx7 = {f: i for i, f in enumerate(flats7)}
+
+rel1_7 = []
+for a in E7[1:]:
+    row = [Fraction(0)] * NF7
+    for f, i in fidx7.items():
+        if a in f:
+            row[i] += 1
+        if 0 in f:
+            row[i] -= 1
+    rel1_7.append(row)
+assert NF7 - mat_rank(rel1_7) == 8  # dim A^1(F7)
+
+mons7 = [(i, j) for i in range(NF7) for j in range(i, NF7)]
+midx7 = {m: k for k, m in enumerate(mons7)}
+rel2_7 = []
+for i, j in mons7:
+    if not comparable(flats7[i], flats7[j]):
+        row = [Fraction(0)] * len(mons7)
+        row[midx7[(i, j)]] = 1
+        rel2_7.append(row)
+for a in E7[1:]:
+    lin = [Fraction(0)] * NF7
+    for f, i in fidx7.items():
+        if a in f:
+            lin[i] += 1
+        if 0 in f:
+            lin[i] -= 1
+    for k in range(NF7):
+        row = [Fraction(0)] * len(mons7)
+        for i, c in enumerate(lin):
+            if c == 0:
+                continue
+            m = (i, k) if i <= k else (k, i)
+            row[midx7[m]] += c
+        if any(v != 0 for v in row):
+            rel2_7.append(row)
+assert len(mons7) - mat_rank(rel2_7) == 1  # dim A^2(F7)
+
+ns7 = nullspace(rel2_7, len(mons7))
+assert len(ns7) == 1
+d7_raw = ns7[0]
+chains7 = []
+for i in E7:
+    for L in lines7:
+        if i in L:
+            a7, b7 = fidx7[frozenset([i])], fidx7[L]
+            m = (a7, b7) if a7 <= b7 else (b7, a7)
+            chains7.append(midx7[m])
+assert len(chains7) == 21, len(chains7)
+vals7 = {d7_raw[c] for c in chains7}
+assert len(vals7) == 1 and vals7 != {Fraction(0)}, vals7
+d7 = [v / next(iter(vals7)) for v in d7_raw]
+assert all(d7[c] == 1 for c in chains7)
+
+
+def degprod7(u, v):
+    s = Fraction(0)
+    for i, ci in enumerate(u):
+        if ci == 0:
+            continue
+        for j, cj in enumerate(v):
+            if cj == 0:
+                continue
+            m = (i, j) if i <= j else (j, i)
+            s += ci * cj * d7[midx7[m]]
+    return s
+
+
+def vec7(pred):
+    return [Fraction(1) if pred(f) else Fraction(0) for f in flats7]
+
+
+alpha7 = vec7(lambda f: 0 in f)
+beta7 = vec7(lambda f: 0 not in f)
+
+
+def mul7(u, v):
+    out = {}
+    for i, ci in enumerate(u):
+        if ci == 0:
+            continue
+        for j, cj in enumerate(v):
+            if cj == 0:
+                continue
+            m = (i, j) if i <= j else (j, i)
+            out[m] = out.get(m, Fraction(0)) + ci * cj
+    return out
+
+
+def deg7(poly):
+    return sum(c * d7[midx7[m]] for m, c in poly.items())
+
+
+m7 = [deg7(mul7(alpha7, alpha7)), deg7(mul7(alpha7, beta7)),
+      deg7(mul7(beta7, beta7))]
+assert m7 == [Fraction(1), Fraction(6), Fraction(8)], m7
+# chi-bar(F7) = t^2 - 6t + 8 (from chi = t^3 - 7t^2 + 14t - 8):
+assert [abs(Fraction(x)) for x in (1, -6, 8)] == m7
+
+m1_7, piv1_7 = rref_pivots(rel1_7, NF7)
+free1_7 = [c for c in range(NF7) if c not in piv1_7]
+assert len(free1_7) == 8
+basis1_7 = []
+for fc in free1_7:
+    v = [Fraction(0)] * NF7
+    v[fc] = 1
+    for c, ri in piv1_7.items():
+        v[c] = -m1_7[ri][fc]
+    basis1_7.append(v)
+G_pd7 = [[degprod7(u, v) for v in basis1_7] for u in basis1_7]
+assert mat_rank(G_pd7) == 8  # Poincare pairing nondegenerate
+
+ell7 = [Fraction(len(f) * (7 - len(f))) for f in flats7]
+q0_7 = degprod7(ell7, ell7)
+assert q0_7 > 0, q0_7
+P1_7 = nullspace([[degprod7(ell7, b) for b in basis1_7]], 8)
+assert len(P1_7) == 7, len(P1_7)
+
+
+def lincomb7(coeffs):
+    v = [Fraction(0)] * NF7
+    for c, b in zip(coeffs, basis1_7):
+        for i in range(NF7):
+            v[i] += c * b[i]
+    return v
+
+
+P1vecs7 = [lincomb7(p) for p in P1_7]
+G7 = [[-degprod7(u, v) for v in P1vecs7] for u in P1vecs7]
+minors7 = [det([rw[:k] for rw in G7[:k]]) for k in range(1, 8)]
+assert all(m > 0 for m in minors7), minors7
+# deg(l^2) > 0, -deg positive definite on the 7-dim ker(l), pairing
+# nondegenerate: the signature on A^1(F7) is exactly (1, 7).
+print(f"F7: 14 generators, dims (1, 8, 1); deg constant on 21 chains; "
+      f"m = (1, 6, 8) = |chi-bar| for t^2 - 6t + 8; deg(l^2) = {q0_7} > 0; "
+      f"-deg(.,.) positive definite on the 7-dim P^1 -- signature (1, 7), "
+      f"with no variety underneath")
+
+
 summary = {
     "matroid": "U(3,4)",
     "generators": NF,
@@ -436,4 +633,5 @@ with open("ch09_summary.json", "w") as f:
     json.dump(summary, f, indent=1)
 print("\nALL CHECKS PASSED: A*(U(3,4)) dims (1,7,1); m = (1,3,3) three ways;")
 print("deg(l^2) = 120; -deg(.,.) positive definite on the 6-dim P^1, exactly.")
-print("The Kahler package for A*(U(3,4)) is real, verified exactly.")
+print("The Kahler package for A*(U(3,4)) is real, verified exactly --")
+print("and for A*(F7), where no variety exists to borrow it from.")
