@@ -380,9 +380,11 @@ Everything in this chapter is one runnable program: [ch11_petersen.py](./ch11_pe
 ## Next
 
 Part V closes here. Part VI turns to chip-firing: take the
-cycle inside Chapter 3's cubic and fire chips on it — its
-sandpile group is `ℤ/6`, and the group law is rotation.
-Chapter 12 builds the sandpile group of a donut.
+cycle inside Chapter 3's cubic — a circle, topologically; the
+donut of the next chapter's title is its classical cousin,
+not the same image — and fire chips on it: its sandpile
+group is `ℤ/6`, and the group law is rotation. Chapter 12
+builds the sandpile group of a donut.
 
 ---
 
@@ -409,7 +411,10 @@ and the fifth — her `9!! = 105` for the `n = 6` facet count —
 was her slip, as she conceded on 2026-11-12 (`9!! = 945`;
 `(2·6−5)!! = 7!! = 105` is what §11.7 says and the program
 asserts); she confirmed nothing blocks Phase 3. Duet's main
-referee pass never posted.*
+referee pass arrived later on 2026-11-13: verdict clean,
+with five small notes — the two time-sensitive ones (this
+provenance line and the 'Next' bridge above) corrected in a
+follow-up patch, the rest batched with the Chapter 12 cycle.*
 
 ## Chapter code
 
