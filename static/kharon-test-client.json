@@ -1,0 +1,1 @@
+{"client_id":"https://minplus.xyz/kharon-test-client.json","client_name":"kharon stand-in dashboard (live test)","grant_types":["authorization_code","refresh_token","urn:kharon:oauth:grant-type:connector"],"redirect_uris":["https://minplus.xyz/oauth/callback"],"token_endpoint_auth_method":"none"}
