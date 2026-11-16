@@ -120,20 +120,32 @@ Chapter 2's genus formula with its sleeves rolled up.
 *Stripping, drawn. Left: the bounded graph, with its three degree-1
 corner vertices crossed out — everything else has degree 2 or 3.
 Right: one pass later nothing else can fall (every survivor has
-degree exactly 2), and what remains is the ring, measured:
-`L = 4 + 2√2`.*
+degree exactly 2), and what remains is the ring, measured two
+ways in §3.3: Euclidean total `4 + 2√2` in the plane, lattice
+total `L = 6` in the tropical metric.*
 
 Even the cycle's size is computable, edge by edge from the vertex
-coordinates: four edges of length 1 and two of length √2, total
+coordinates — but it depends on the ruler. Measured with a
+Euclidean ruler in the plane: four edges of length 1 and two of
+length √2, total `4 + 2√2 ≈ 6.828`. The tropical metric is not
+the Euclidean one: an edge's length is its **lattice length**
+(Chapter 2's definition — the displacement `(1,1)` is *one*
+primitive step, not √2 of them). The two diagonal edges displace
+by exactly one primitive step, the four axis edges likewise, so
+every edge has lattice length 1, and the cycle's tropical length
+is
 
 ```
-L = 4 + 2√2 ≈ 6.828
+L = 6.
 ```
 
 Remember that number. Much later in this book (Part VI) this cycle
 acquires a *group law*, and `L` becomes the circumference of its
 Jacobian — the tropical elliptic curve turns out to be, metrically,
-a circle of length `4 + 2√2` wearing a graph as a name tag.
+a circle of length `6` wearing a graph as a name tag. (An earlier
+version of this chapter promised `4 + 2√2` there — the Euclidean
+number wearing the metric's clothes; Chapter 12's referee pass
+caught it, and the correction is part of that chapter's ship.)
 
 ## 3.4 The classical postcard
 
@@ -205,8 +217,9 @@ Everything in this chapter is one runnable program: [ch03_tropical_cubic.py](./c
 - **Interior lattice points ↔ cycles**, concretely: a point's star
   dualises to a cycle; leaf-stripping isolates it; bridges are the
   trees grafted on.
-- The tropical cubic's cycle has a **metric**: length `4 + 2√2`,
-  the circumference its Jacobian will turn out to have.
+- The tropical cubic's cycle has a **metric**: lattice length
+  `6` (`4 + 2√2` with a Euclidean ruler) — and `6` is the
+  circumference its Jacobian will turn out to have.
 - Genus is one number computed three compatible ways:
   `E − V + 1`, interior points, `(d−1)(d−2)/2`.
 
@@ -231,9 +244,15 @@ and passed the same day. The two extra figures (leaf-stripping, the
 classical postcard) were added 2026-11-01: code
 `hidden_files/code/ch02_ch03_extra_figures.py` — the strip is computed,
 not drawn by hand: the survivors are asserted to be exactly the six
-faces containing (1,1), 2-regular, with edge lengths
-{1, 1, 1, 1, √2, √2} summing to 4 + 2√2, and the postcard's curve is
-asserted smooth (discriminant 64 ≠ 0) before rendering.*
+faces containing (1,1), 2-regular, with Euclidean edge lengths
+{1, 1, 1, 1, √2, √2} summing to 4 + 2√2 and lattice lengths all 1
+summing to 6, and the postcard's curve is
+asserted smooth (discriminant 64 ≠ 0) before rendering. The
+lattice-length assertion and this chapter's §3.3 correction —
+`L = 6`, not `4 + 2√2`, is the Jacobian's circumference — were
+added 2026-11-16 with Chapter 12's ship, on that chapter's
+referee pass; the chapter program now asserts the lattice total
+alongside the Euclidean one.*
 
 ## Chapter code
 

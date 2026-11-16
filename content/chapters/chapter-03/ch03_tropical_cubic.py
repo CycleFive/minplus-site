@@ -310,6 +310,13 @@ print(f"  genus g = E - V + 1 = {len(bounded)} - {len(verts)} + 1 = {g} "
       f"(predicted 1 = # interior lattice points)")
 assert g == 1
 print(f"  cycle length (Euclidean): {cyc_len:.6f}")
+# the tropical metric is lattice length, not Euclidean: every cycle
+# edge displaces by exactly one primitive step, so L = 6 -- this is
+# the circumference of the metric Jacobian (Chapter 12, Sec. 12.8;
+# assertion added 2026-11-16 on that chapter's referee pass)
+cyc_lat = sum(lattice_length(be["v1"], be["v2"]) for be in cycle_e)
+print(f"  cycle length (lattice): {cyc_lat}")
+assert cyc_lat == 6, f"lattice cycle length {cyc_lat} != 6"
 for be in cycle_e:
     assert be["weight"] == 1
 
