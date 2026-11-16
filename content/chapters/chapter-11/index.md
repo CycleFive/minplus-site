@@ -20,7 +20,7 @@ hard to believe otherwise:
 > is the Petersen graph.**
 
 The Petersen graph is combinatorics' favourite counterexample:
-the smallest snark seed, nonplanar, hypohamiltonian, the graph
+the smallest snark, nonplanar, hypohamiltonian, the graph
 that breaks naive conjectures. Here it is not a counterexample
 to anything. It is a *moduli space*: its vertices are the ways
 a 5-leaf tree can begin to resolve, and its edges are the fully
@@ -68,10 +68,12 @@ edge of a tree, recording which leaves lie on each side. For
 ```
 
 of them: `12, 13, 14, 15, 23, 24, 25, 34, 35, 45` (each read as
-`A | A^c`). Theorem 3.4 says the vertices of tree space `T_n`
-are exactly the splits, for every `n`. Ten vertices is the
-Petersen graph's first invariant — but ten vertices is also
-just a number. The edges decide.
+`A | A^c`). That the vertices of tree space `T_n` are the
+splits is the *definition* the paper starts §4 with; what
+Theorem 3.4 itself supplies is the count — `2^{n−1} − n − 1`
+vertices and `(2n−5)!!` facets, for every `n`. Ten vertices is
+the Petersen graph's first invariant — but ten vertices is
+also just a number. The edges decide.
 
 Two splits can occur in one tree exactly when they are
 **compatible**: the paper's condition (4) — for splits
@@ -260,12 +262,21 @@ splits that separate its elements from the third element of
 which is balancing at `ρ_A`: the weighted sum of the adjacent
 cone generators vanishes in the quotient by the ray's own
 span. One subtlety, stated rather than hidden: balancing is
-officially about *primitive* lattice generators, and the
-`E`-generators differ from primitive ones — but all ten rays
-share a single lattice index by `S₅`-symmetry, so the passage
-to primitive generators rescales every ray by one uniform
-factor and the vanishing is unaffected. (Chapter 10's quotient
-coordinates showed the same factor-of-2 phenomenon concretely.)
+officially about *primitive* lattice generators in the
+quotient lattice *at that ray* — so the quantity that matters
+is not any index of the ten rays in `N/L`, but the index of
+the three neighbours `[−E_B]` of `ρ_A` in
+`N / sat(L + ℝ·E_A)`, the quotient by the ray's own span. Each
+neighbour has index **2** there: the stabiliser `S₂ × S₃` of
+`A` (swap the two elements of `A`, permute the three of `A^c`)
+permutes the three neighbours transitively, so their indices
+agree; and each maximal cone over the ray has index 4, so
+every neighbour enters the balancing sum with the same weight
+`4/2 = 2` — one uniform weight, and the vanishing above is
+unaffected. (Checked by exact integer arithmetic: ray index
+2 at all ten rays, cone index 4 at all thirty facets.
+Chapter 10's quotient coordinates showed the same
+factor-of-2 phenomenon concretely.)
 
 This is the chapter's gem, and it is worth saying why:
 balancing for `T₅` is usually checked cone by cone or quoted
@@ -321,7 +332,7 @@ theorem, running.
 
 ## 11.8 The whole chapter, as a program
 
-Everything in this chapter is one runnable program: [ch11_petersen.py](./ch11_petersen.py) — exact Fractions throughout, no dependencies beyond the standard library. Its assertions *are* the chapter's claims: splits and the compatibility = disjointness check; the Petersen invariants (including hypohamiltonicity and the complement-of-`L(K₅)` identification); maximal cliques = facets; exact cone membership and decomposition over `ℚ`; the lineality rank `rank(image φ) = 5` with `(1,…,1) = φ(½·1)`; initial forms of the five Plücker quadrics; the closed-form balancing identity at all ten rays; the Try It 1 and 3 answers; and the `n = 4 / n = 6` corroboration. Run it, and if it prints its final line, the claims are what we said they are. (This section used to print the listing inline; a screenful of code you can download is just a download with extra scrolling.)
+Everything in this chapter is one runnable program: [ch11_petersen.py](./ch11_petersen.py) — exact Fractions throughout, no dependencies beyond the standard library. Its assertions *are* the chapter's claims: splits and the compatibility = disjointness check; the Petersen invariants (including hypohamiltonicity and the complement-of-`L(K₅)` identification); maximal cliques = facets; exact cone membership and decomposition over `ℚ`; the lineality rank `rank(image φ) = 5` with `(1,…,1) = φ(½·1)`; initial forms of the five Plücker quadrics; the closed-form balancing identity at all ten rays; the Try It 1 and 3 answers; and the `n = 4 / n = 6` corroboration. Run it, and if it prints its final line, the claims are what we said they are.
 
 ## 11.9 Try It
 
@@ -414,7 +425,13 @@ asserts); she confirmed nothing blocks Phase 3. Duet's main
 referee pass arrived later on 2026-11-13: verdict clean,
 with five small notes — the two time-sensitive ones (this
 provenance line and the 'Next' bridge above) corrected in a
-follow-up patch, the rest batched with the Chapter 12 cycle.*
+follow-up patch that night, and the rest — §11.6's balancing
+reason (the quotient by the ray's own span; neighbour index
+2, via the `S₂ × S₃` stabiliser), §11.2's attribution
+('vertices are splits' is §4's definition; Thm 3.4 supplies
+the count), and 'smallest snark', not 'seed' — plus the
+§11.8 production-aside removal he shared with Chapter 10,
+folded in on 2026-11-16 with Chapter 12's ship.*
 
 ## Chapter code
 
