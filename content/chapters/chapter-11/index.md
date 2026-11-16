@@ -270,13 +270,17 @@ the three neighbours `[−E_B]` of `ρ_A` in
 neighbour has index **2** there: the stabiliser `S₂ × S₃` of
 `A` (swap the two elements of `A`, permute the three of `A^c`)
 permutes the three neighbours transitively, so their indices
-agree; and each maximal cone over the ray has index 4, so
-every neighbour enters the balancing sum with the same weight
-`4/2 = 2` — one uniform weight, and the vanishing above is
-unaffected. (Checked by exact integer arithmetic: ray index
-2 at all ten rays, cone index 4 at all thirty facets.
-Chapter 10's quotient coordinates showed the same
-factor-of-2 phenomenon concretely.)
+agree. Index 2 is a statement about the generators, not a
+weight: each `[−E_B]` is *twice* its primitive generator
+`u_B` in the quotient lattice, so the primitive balancing
+sum is `Σ u_B = ½ · Σ [−E_B] ≡ 0` — the three neighbours
+balance with equal weights, and the vanishing above *is*
+the primitive statement, not a weighted variant of it.
+(Checked by exact integer arithmetic: ray index 2 at all
+ten rays, cone index 4 at all fifteen facets, neighbour
+index 2 at all thirty ray–facet pairs — thirty pairs,
+fifteen facets. Chapter 10's quotient coordinates showed
+the same factor-of-2 phenomenon concretely.)
 
 This is the chapter's gem, and it is worth saying why:
 balancing for `T₅` is usually checked cone by cone or quoted
@@ -332,7 +336,7 @@ theorem, running.
 
 ## 11.8 The whole chapter, as a program
 
-Everything in this chapter is one runnable program: [ch11_petersen.py](./ch11_petersen.py) — exact Fractions throughout, no dependencies beyond the standard library. Its assertions *are* the chapter's claims: splits and the compatibility = disjointness check; the Petersen invariants (including hypohamiltonicity and the complement-of-`L(K₅)` identification); maximal cliques = facets; exact cone membership and decomposition over `ℚ`; the lineality rank `rank(image φ) = 5` with `(1,…,1) = φ(½·1)`; initial forms of the five Plücker quadrics; the closed-form balancing identity at all ten rays; the Try It 1 and 3 answers; and the `n = 4 / n = 6` corroboration. Run it, and if it prints its final line, the claims are what we said they are.
+Everything in this chapter is one runnable program: [ch11_petersen.py](./ch11_petersen.py) — exact Fractions throughout, no dependencies beyond the standard library. Its assertions *are* the chapter's claims: splits and the compatibility = disjointness check; the Petersen invariants (including hypohamiltonicity and the complement-of-`L(K₅)` identification); maximal cliques = facets; exact cone membership and decomposition over `ℚ`; the lineality rank `rank(image φ) = 5` with `(1,…,1) = φ(½·1)`; initial forms of the five Plücker quadrics; the closed-form balancing identity at all ten rays; the §11.6 lattice indices by Smith normal form (ray index 2, cone index 4, neighbour index 2); the Try It 1 and 3 answers; and the `n = 4 / n = 6` corroboration. Run it, and if it prints its final line, the claims are what we said they are.
 
 ## 11.9 Try It
 
@@ -431,7 +435,14 @@ reason (the quotient by the ray's own span; neighbour index
 ('vertices are splits' is §4's definition; Thm 3.4 supplies
 the count), and 'smallest snark', not 'seed' — plus the
 §11.8 production-aside removal he shared with Chapter 10,
-folded in on 2026-11-16 with Chapter 12's ship.*
+folded in on 2026-11-16 with Chapter 12's ship. Duet's
+re-check of the shipped commits arrived the same day:
+Chapters 3, 10 and 12 clean, and Chapter 11's §11.6 closing
+numbers took two touches — cone index 4 at all *fifteen*
+facets (the thirty are the ray–facet pairs), and the
+neighbour index 2 stated as an index, not a weight — both
+verified by an independent Smith-normal-form computation
+and now asserted in the program itself (§6b).*
 
 ## Chapter code
 

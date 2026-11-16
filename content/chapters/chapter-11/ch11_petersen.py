@@ -53,9 +53,14 @@ What is computed (all asserted in-code, exact Fractions where linear):
         sum_{B disjoint A} E_B  =  E_A + 2*phi( (1/2) * 1_{A^c} )
    exactly (proved entrywise in the log; asserted here for all 10).
    Hence sum of the neighbouring cone generators is 0 mod
-   span(E_A, image phi): balanced.  All rays have the same lattice
-   index by S_5-symmetry, so E-generators vs primitive generators
-   differ by one uniform factor and balancing is unaffected.
+   span(E_A, image phi): balanced.  The lattice indices behind
+   Sec. 11.6's precision paragraph are asserted in 6b below, by
+   exact Smith normal form: ray index 2 at all ten rays, cone
+   index 4 at all fifteen facets, neighbour index 2 at all
+   thirty ray-facet pairs -- each [-E_B] is twice its primitive
+   generator in the quotient by the ray's own span, so the
+   primitive balancing sum is half the E-sum and vanishes with
+   equal weights (the 2 is the neighbour index, not a weight).
 7b. Phase 2 additions (2026-11-12, referee anchors): Petersen =
    complement of L(K5) checked pair by pair; rank(image phi) = 5 with
    (1,...,1) = phi((1/2)*1) (7 = 5 + 2 lineality bookkeeping);
@@ -72,6 +77,7 @@ What is computed (all asserted in-code, exact Fractions where linear):
 
 from fractions import Fraction as Q
 from itertools import combinations, permutations
+from math import gcd
 import random
 
 LEAVES = (1, 2, 3, 4, 5)
@@ -553,6 +559,132 @@ def main():
     print("6. balancing at all 10 rays, closed form: "
           "sum_{B disjoint A} E_B = E_A + 2*phi((1/2)*1_{A^c}); "
           "neighbour generators sum to 0 mod span(E_A, image phi)")
+
+    # --- 6b. the lattice indices of Sec. 11.6, by exact Smith normal form
+    # N = Z^10 / sat(image phi); in SNF coordinates for phi the saturated
+    # lineality is the first 5 coordinate axes, so a class's free
+    # coordinates are the last 5 entries of U x.  Divisibility of a class
+    # = gcd of its free coordinates; a sublattice's index in its
+    # saturation = product of its nonzero elementary divisors.
+    def snf(A):
+        """Smith normal form with transforms: returns (U, D, V), U*A*V = D."""
+        m, n = len(A), len(A[0])
+        D = [row[:] for row in A]
+        U = [[int(i == j) for j in range(m)] for i in range(m)]
+        V = [[int(i == j) for j in range(n)] for i in range(n)]
+
+        def rswap(i, j):
+            D[i], D[j] = D[j], D[i]
+            U[i], U[j] = U[j], U[i]
+
+        def radd(i, j, q):
+            D[i] = [x + q * y for x, y in zip(D[i], D[j])]
+            U[i] = [x + q * y for x, y in zip(U[i], U[j])]
+
+        def cswap(i, j):
+            for r in range(m):
+                D[r][i], D[r][j] = D[r][j], D[r][i]
+            for r in range(n):
+                V[r][i], V[r][j] = V[r][j], V[r][i]
+
+        def cadd(i, j, q):
+            for r in range(m):
+                D[r][i] += q * D[r][j]
+            for r in range(n):
+                V[r][i] += q * V[r][j]
+
+        for t in range(min(m, n)):
+            while True:
+                best = None
+                for i in range(t, m):
+                    for j in range(t, n):
+                        if D[i][j] and (best is None or
+                                        abs(D[i][j]) < abs(D[best[0]][best[1]])):
+                            best = (i, j)
+                if best is None:
+                    return U, D, V
+                if best[0] != t:
+                    rswap(best[0], t)
+                if best[1] != t:
+                    cswap(best[1], t)
+                changed = True
+                while changed:
+                    changed = False
+                    for i in range(m):
+                        if i != t and D[i][t]:
+                            q = D[i][t] // D[t][t]
+                            if q:
+                                radd(i, t, -q)
+                                changed = True
+                            if D[i][t]:
+                                rswap(i, t)
+                                changed = True
+                    for j in range(n):
+                        if j != t and D[t][j]:
+                            q = D[t][j] // D[t][t]
+                            if q:
+                                cadd(j, t, -q)
+                                changed = True
+                            if D[t][j]:
+                                cswap(j, t)
+                                changed = True
+                bad = next(((i, j) for i in range(t + 1, m)
+                            for j in range(t + 1, n)
+                            if D[i][j] % D[t][t]), None)
+                if bad is None:
+                    break
+                radd(t, bad[0], 1)
+            if D[t][t] < 0:
+                for r in range(m):
+                    D[r][t] = -D[r][t]
+                for r in range(n):
+                    V[r][t] = -V[r][t]
+        return U, D, V
+
+    def igcd(vec):
+        g = 0
+        for x in vec:
+            g = gcd(g, x)
+        return g
+
+    def sat_index(cols):
+        M = [[cols[j][i] for j in range(len(cols))]
+             for i in range(len(cols[0]))]
+        _, D, _ = snf(M)
+        prod = 1
+        for i in range(min(len(D), len(D[0]))):
+            if D[i][i]:
+                prod *= D[i][i]
+        return prod
+
+    P_int = [[int(PHI_COLS[j][i]) for j in range(5)] for i in range(10)]
+    U_phi, D_phi, _ = snf(P_int)
+    assert [D_phi[i][i] for i in range(5)] == [1, 1, 1, 1, 2]
+
+    def free_coords(x):
+        return [sum(U_phi[i][k] * x[k] for k in range(10))
+                for i in range(5, 10)]
+
+    E_int = {A: [int(x) for x in ES[A]] for A in SPLITS}
+    for A in SPLITS:                       # ray index 2 at all ten rays
+        assert igcd(free_coords(E_int[A])) == 2, A
+    assert len(EDGES) == 15
+    for (A, B) in EDGES:                   # cone index 4 at all 15 facets
+        assert sat_index([free_coords(E_int[A]),
+                          free_coords(E_int[B])]) == 4, (A, B)
+    n_pairs = 0
+    for A in SPLITS:                       # neighbour index 2, all 30 pairs
+        Ua, Da, _ = snf([[x] for x in free_coords(E_int[A])])
+        assert Da[0][0] == 2
+        for B in ADJ[A]:
+            c = [sum(Ua[i][k] * free_coords(E_int[B])[k] for k in range(5))
+                 for i in range(5)]
+            assert igcd(c[1:]) == 2, (A, B)
+            n_pairs += 1
+    assert n_pairs == 30
+    print("6b. lattice indices (SNF, exact): ray index 2 at all 10 rays; "
+          "cone index 4 at all 15 facets; neighbour index 2 at all 30 "
+          "ray-facet pairs")
 
     # --- 7. n=4 and n=6 corroboration (same machinery)
     for n, (nv, ne, nfac, tri_per_edge) in ((4, (3, 0, 3, None)),
