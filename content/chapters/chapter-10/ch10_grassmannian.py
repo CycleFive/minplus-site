@@ -36,10 +36,12 @@ What is computed (all asserted in-code):
    <=> w = phi(a) - t*E_{12,34} for a unique-mod-... a and t>=0,
    with t = (s1-s2)/2 the internal edge length ("-w = distance" units).
    Checked on random integer points (exact Fractions).
-3. Quotient fan: R^6/image(phi) --iso--> R^2 via (s1-s2, s1-s3).
-   Three rays: [E_{12,34}] -> (1,1), [E_{13,24}] -> (-1,0),
-   [E_{14,23}] -> (0,-1).  Primitive in Z^2, sum = (0,0): BALANCED.
-   (So G_{2,4}/image(phi) is a tropical line -- cf. day 0.)
+3. Quotient fan: R^6/image(phi) --iso--> R^2 via (s2-s1, s3-s1).
+   (The sign is chosen so the quotient is Chapter 1's line exactly,
+   not its negative: referee correction, 2026-11-16.)
+   Three rays: [-E_{12,34}] -> (-1,-1), [-E_{13,24}] -> (1,0),
+   [-E_{14,23}] -> (0,1).  Primitive in Z^2, sum = (0,0): BALANCED.
+   (So G_{2,4}/image(phi) is the tropical line of Chapter 1.)
 4. Initial ideals: for w in a cone interior, in_w of the Plucker quadric
    is the binomial -p13*p24 + p14*p23 (etc.), monomial-free, i.e. w is in
    the tropical variety (Thm 2.1(c)); for w off the fan in_w is a
@@ -174,10 +176,12 @@ def decompose(w, topo):
 # ---------------------------------------------------------------- quotient fan
 
 def quot(w):
-    """R^6/image(phi) --iso--> R^2,  w |-> (s1-s2, s1-s3).  Kernel is
-    exactly image(phi) (both 4-dim; phi(a) has s1=s2=s3=sum(a))."""
+    """R^6/image(phi) --iso--> R^2,  w |-> (s2-s1, s3-s1).  Kernel is
+    exactly image(phi) (both 4-dim; phi(a) has s1=s2=s3=sum(a)).
+    Sign chosen so the three rays are (-1,-1), (1,0), (0,1) --
+    Chapter 1's tropical line itself, not its negative."""
     s1, s2, s3 = pair_sums(w)
-    return (s1 - s2, s1 - s3)
+    return (s2 - s1, s3 - s1)
 
 
 # ---------------------------------------------------------------- initial ideals
@@ -332,18 +336,18 @@ def main():
 
     # --- 3. quotient fan: 3 rays, primitive, balanced
     rays = [quot(scale6(-1, E)) for E in ES]
-    assert rays == [(Q(2), Q(2)), (Q(-2), Q(0)), (Q(0), Q(-2))]
-    prim = [(Q(1), Q(1)), (Q(-1), Q(0)), (Q(0), Q(-1))]
+    assert rays == [(Q(-2), Q(-2)), (Q(2), Q(0)), (Q(0), Q(2))]
+    prim = [(Q(-1), Q(-1)), (Q(1), Q(0)), (Q(0), Q(1))]
     for r, p in zip(rays, prim):
         assert (r[0] / p[0] if p[0] else r[1] / p[1]) == 2  # ray = 2*primitive
-        assert abs(p[0]) + abs(p[1]) == 1 or (p == (Q(1), Q(1)))
+        assert abs(p[0]) + abs(p[1]) == 1 or (p == (Q(-1), Q(-1)))
     import math
     for p in prim:
         assert math.gcd(int(p[0]), int(p[1])) == 1
     assert (sum(p[0] for p in prim), sum(p[1] for p in prim)) == (Q(0), Q(0))
     # kernel of quot is exactly image(phi): dim check
     assert quot(phi([Q(1), Q(2), Q(3), Q(4)])) == (Q(0), Q(0))
-    print("3. quotient fan: rays (1,1),(-1,0),(0,-1), primitive, sum=0 -- a tropical line")
+    print("3. quotient fan: rays (-1,-1),(1,0),(0,1), primitive, sum=0 -- Chapter 1's tropical line, exactly")
 
     # --- 4. initial ideals: binomial on fan, monomial off fan
     for k in range(3):
@@ -397,9 +401,17 @@ def main():
             B = tuple(i for i in [1, 2, 3, 4] if i not in A)
             if len(B) >= 2 and A < B:
                 verts.append((A, B))
-    assert len(verts) == 3 == 2 ** 3 - 4 - 1
-    assert len(ES) == 3 == 3 * 1  # (2*4-5)!! = 3 facets
-    print("7. T_4: 3 vertices (=2^3-4-1), 3 facets (=3!!), pure dim n-3=1")
+    def odd_df(k):  # odd double factorial, computed (was hard-coded)
+        r = 1
+        while k > 1:
+            r *= k
+            k -= 2
+        return r
+    n4 = 4
+    assert len(verts) == 2 ** (n4 - 1) - n4 - 1 == 3
+    assert len(ES) == odd_df(2 * n4 - 5) == 3  # facets, computed
+    print("7. T_4: 3 vertices (=2^3-4-1), 3 facets (=(2*4-5)!!, computed), "
+          "complex pure dim n-4=0 (three points; the fan over it is the tripod)")
 
     # --- 8. Try It answers (added in Phase 2 of the book cycle)
     a_try = [Q(5, 2), Q(5, 2), Q(0), Q(0)]  # sum(a) = 5

@@ -23,11 +23,14 @@ p12·p34 − p13·p24 + p14·p23 = 0.
 
 Tropicalise it: replace each `p_ij` by a weight `w_ij ∈ ℝ`
 (think: a valuation), and ask which weight vectors can occur.
-Speyer–Sturmfels' theorem (arXiv:math/0304218, Thm 3.4) says the
-answer for `Gr(2,n)` is **phylogenetic tree space**: the weights
-are exactly the (negatives of) tree metrics. This chapter does
-the first nontrivial case, `n = 4`, end to end — and finds that
-Chapter 1's object was a moduli space all along.
+Speyer–Sturmfels' answer for `Gr(2,n)` is **phylogenetic tree
+space** (arXiv:math/0304218): Theorem 3.4 is the
+simplicial-complex statement — the complex `T_n` of compatible
+splits — and the description of the weights as (negatives of)
+tree metrics, "`−w_ij` is the distance", is §4's form of it
+(Theorem 4.2). This chapter does the first nontrivial case,
+`n = 4`, end to end — and finds that Chapter 1's object was a
+moduli space all along.
 
 ## 10.1 The four-point condition
 
@@ -39,8 +42,11 @@ s1 = d12 + d34,   s2 = d13 + d24,   s3 = d14 + d23,
 ```
 
 and a classical fact about trees says: **the two largest of
-`s1, s2, s3` are equal** — the pairing that respects the tree's
-one internal edge wins twice, the cross pairing loses. With the
+`s1, s2, s3` are equal** — and they are the two pairings that
+*cross* the tree's one internal edge, each counting it twice;
+the pairing that respects the split (the two cherries) counts
+it zero times and comes in lower, by exactly `2t`, twice the
+internal edge length. With the
 book's min-plus sign convention (`w = −d`), that becomes the
 paper's **four-point condition** (6):
 
@@ -56,8 +62,8 @@ The program checks exactly that (§10.2).
 
 ## 10.2 Three cones, and the quotient is a tropical line
 
-Two kinds of freedom move `w` without changing the tree's
-essential shape. Scaling column `i` of the 2-plane by a constant
+One kind of freedom moves `w` without changing the tree's
+internal structure. Scaling column `i` of the 2-plane by a constant
 shifts `w_ij ↦ w_ij + a_i + a_j`; the map
 `φ(a)_ij = a_i + a_j` sweeps out a 4-dimensional subspace
 `image(φ) ⊂ ℝ⁶` (rank exactly 4, asserted; note the scalar shift
@@ -87,19 +93,22 @@ random integer points with exact fractions:
   `t` is `φ`-invariant (500 trials) — pendant edges are exactly
   what the quotient mods out.
 
-Now quotient: `ℝ⁶ / image(φ) ≅ ℝ²` via `(s1−s2, s1−s3)`. The
-three cone generators land on the rays
+Now quotient: `ℝ⁶ / image(φ) ≅ ℝ²` via `(s2−s1, s3−s1)` — the
+signs chosen so the quotient is Chapter 1's line *exactly*, not
+its negative. The three cone generators land on the rays
 
 ```
-(1,1),   (−1,0),   (0,−1)
+(−1,−1),   (1,0),   (0,1)
 ```
 
-— primitive in `ℤ²`, and `(1,1)+(−1,0)+(0,−1) = 0`. **Balanced.**
+— primitive in `ℤ²`, and `(−1,−1)+(1,0)+(0,1) = 0`. **Balanced.**
 The quotient fan is a tropical line (the paper's Ex. 3.2 says so
-in words; the program checks the balancing sum). Chapter 1's
-tripod returns, one level up: it is the moduli space of
-4-leaf trees, i.e. of 2-planes in 4-space, with the star tree
-at the vertex and the three resolved topologies on the rays.
+in words; the program checks the balancing sum) — and with
+these coordinates it is *the* tropical line of Chapter 1,
+`min(x, y, 0)`'s tripod, ray for ray. Chapter 1's tripod
+returns, one level up: it is the moduli space of 4-leaf trees,
+i.e. of 2-planes in 4-space, with the star tree at the vertex
+and the three resolved topologies on the rays.
 
 ![Tree space for four leaves: the quotient fan is a tropical line with the three tree topologies on its rays and the star tree at the origin; a worked example runs tree → weights → four-point tie → lift matrix](figures/day10-tree-space.svg)
 
@@ -119,9 +128,9 @@ finds the binomial for that topology; off the fan, a monomial;
 
 | topology | strict max | initial form `in_w` | quotient ray |
 |---|---|---|---|
-| `12|34` | `s1` | `−p13·p24 + p14·p23` | `(1,1)` |
-| `13|24` | `s2` | `p12·p34 + p14·p23` | `(−1,0)` |
-| `14|23` | `s3` | `p12·p34 − p13·p24` | `(0,−1)` |
+| `12|34` | `s1` | `−p13·p24 + p14·p23` | `(−1,−1)` |
+| `13|24` | `s2` | `p12·p34 + p14·p23` | `(1,0)` |
+| `14|23` | `s3` | `p12·p34 − p13·p24` | `(0,1)` |
 
 ![The three cones of the tropical Grassmannian Gr(2,4): one per tree topology, each with its strict-maximum pair sum, its initial binomial, and its quotient ray](figures/ch10-three-cones.svg)
 
@@ -132,7 +141,11 @@ rendering.*
 
 More: every fan point **lifts**. Corollary 2.2 made
 constructive: given `w = φ(a) − t·E_{12,34}` with `t > 0`, the
-`2×4` matrix over `ℂ((π))` with columns
+`2×4` matrix over the **Puiseux series** field `ℂ{{π}}` — the
+paper's `K`; Puiseux, not Laurent, because `t` and the `a_i`
+are often half-integers (the program's own tests use
+`t = 5/2`), so fractional powers of `π` are unavoidable — with
+columns
 
 ```
 (1,0),  (0,1),  (π^{−t}, π^{−t}),  (π^{−t}, π^{−t} − π^{t}),
@@ -142,16 +155,28 @@ column `i` then scaled by `π^{a_i}`, has all six 2×2 minors
 with valuations exactly `w_ij` — verified by exact `π`-adic
 series arithmetic on 8 test points, including the ridge and
 the origin, and the six minors of each lift satisfy the
-Plücker relation *exactly*, as series. The tropical point is
-not an approximation of a plane; it is the valuation shadow of
-one, and the shadow can be reversed.
+Plücker relation *exactly*, as series. One boundary case
+deserves its sentence: the printed matrix is the `t > 0`
+shape — at `t = 0` it degenerates (`p14 = 0`), and the ridge
+and origin points are lifted instead by a separate matrix
+whose fourth column is `(2,1)`; the program's lift code has
+exactly that branch, and two of its 8 test points are the
+ridge and the origin. The tropical point is not an
+approximation of a plane; it is the valuation shadow of one,
+and the shadow can be reversed.
 
 ## 10.4 The combinatorics of T₄
 
-Tree space `T₄` itself: `2³ − 4 − 1 = 3` vertices (the three
-splits, as rays), `3!! = 3` facets (the three trivalent trees),
-pure of dimension `n − 3 = 1` — a tripod, again. The next
-chapter takes `n = 5`, where this graph becomes a famous one.
+Tree space `T₄` itself — Theorem 3.4's simplicial complex:
+`2³ − 4 − 1 = 3` vertices (the three splits), `3!! = 3` facets
+(the three trivalent trees, here single splits), pure of
+dimension `n − 4 = 0` — **three points**. The tripod of §10.2
+is the *fan over* that complex, modulo lineality: a fan over
+three points is three rays. Keep complex and fan apart,
+because at `n = 5` the complex is 1-dimensional — a graph,
+Chapter 11 — while its fan quotient is 2-dimensional. The
+next chapter takes `n = 5`, where this graph becomes a
+famous one.
 
 > **Honest Box — a sign typo in the paper, caught by
 > computation.** Equation (8) of Speyer–Sturmfels as printed
@@ -160,8 +185,10 @@ chapter takes `n = 5`, where this graph becomes a famous one.
 > condition (6), a tree metric `d = t·E_{12,34}` gives
 > `w = −t·E`, which satisfies (6) but is **not** in
 > `image(φ) + ℝ≥0·E` (writing `−tE = φ(a) + sE`, `s ≥ 0`, forces
-> `φ(a) = cE` with `c < 0`, and `a1+a2 = 0`, `a1+a3 = c`,
-> `a3+a4 = 0` give `c = 0` — contradiction). The correct
+> `φ(a) = cE` with `c < 0`, and the four equations
+> `a1+a2 = 0`, `a1+a3 = c`, `a3+a4 = 0`, `a2+a4 = c` give
+> `c = 0` — contradiction; all four are needed, since
+> `a = (c,−c,0,0)` satisfies the first three alone). The correct
 > generators are `−E_{A,B}`. This was confirmed against the
 > arXiv TeX source, not just a rendering: the sign in (8) is a
 > typo in the paper. The program asserts both directions:
@@ -170,7 +197,7 @@ chapter takes `n = 5`, where this graph becomes a famous one.
 
 ## 10.5 The whole chapter, as a program
 
-Everything in this chapter is one runnable program: [ch10_grassmannian.py](./ch10_grassmannian.py) — exact Fractions and exact `π`-adic series throughout, no dependencies beyond the standard library. Its assertions *are* the chapter's claims, in ten groups: the sign check on (8) (`−E` in the fan's interior, `+E` out); four-point ⇔ union of the three cones `image(φ) − t·E_topo` on 4000 random integer points, with the decomposition round-tripped; the quotient fan's three rays primitive and summing to zero; initial forms binomial on the fan and monomial off it (2000 points); 8 fan points lifted to `2×4` matrices over `ℂ((π))` with valuations exact; topology and internal edge `t` recovered and `φ`-invariant (500 trials); the `T₄` counts (3 vertices, 3 facets); and — added when the draft was re-verified for the book — the Try It answer key below, `rank(φ) = 4` with `(1,…,1) = φ(½,½,½,½)`, and the lifted minors satisfying the Plücker relation exactly for all three topologies. Run it, and if it prints its final line, the claims are what we said they are. (This section used to print the listing inline; a screenful of code you can download is just a download with extra scrolling.)
+Everything in this chapter is one runnable program: [ch10_grassmannian.py](./ch10_grassmannian.py) — exact Fractions and exact `π`-adic series throughout, no dependencies beyond the standard library. Its assertions *are* the chapter's claims, in ten groups: the sign check on (8) (`−E` in the fan's interior, `+E` out); four-point ⇔ union of the three cones `image(φ) − t·E_topo` on 4000 random integer points, with the decomposition round-tripped; the quotient fan's three rays primitive and summing to zero; initial forms binomial on the fan and monomial off it (2000 points); 8 fan points lifted to `2×4` matrices over `ℂ{{π}}` with valuations exact; topology and internal edge `t` recovered and `φ`-invariant (500 trials); the `T₄` counts (3 vertices, 3 facets — the facet count computed as `(2·4−5)!!`, not hard-coded); and — added when the draft was re-verified for the book — the Try It answer key below, `rank(φ) = 4` with `(1,…,1) = φ(½,½,½,½)`, and the lifted minors satisfying the Plücker relation exactly for all three topologies. Run it, and if it prints its final line, the claims are what we said they are.
 
 ## 10.6 Try It
 
@@ -179,7 +206,7 @@ Everything in this chapter is one runnable program: [ch10_grassmannian.py](./ch1
    and what is the internal edge length `t`?
 2. Why does adding `φ(a)` to `w` never change `t` — in tree
    language, what does `φ(a)` move?
-3. The quotient rays are `(1,1), (−1,0), (0,−1)`. Verify the
+3. The quotient rays are `(−1,−1), (1,0), (0,1)`. Verify the
    balancing condition, and say which topology each ray
    carries.
 
@@ -194,9 +221,9 @@ Everything in this chapter is one runnable program: [ch10_grassmannian.py](./ch1
   hence `t` — are unchanged. In tree language `φ(a)` moves
   pendant (leaf) edge lengths only; the internal edge is the
   tree's internal structure, which column scaling cannot touch.
-- **3.** `(1,1) + (−1,0) + (0,−1) = (0,0)` — balanced. In the
-  program's coordinates: `(1,1)` carries `12|34`, `(−1,0)`
-  carries `13|24`, `(0,−1)` carries `14|23`.
+- **3.** `(−1,−1) + (1,0) + (0,1) = (0,0)` — balanced. In the
+  program's coordinates: `(−1,−1)` carries `12|34`, `(1,0)`
+  carries `13|24`, `(0,1)` carries `14|23`.
 
 ## What we learned
 
@@ -231,9 +258,22 @@ figure `files/figures/day10-tree-space.png` (generator
 `hidden_files/code/day10_figures.py`), study log Day 10 entry,
 run log `hidden_files/day10-run.log`. Source: D. Speyer &
 B. Sturmfels, "The tropical Grassmannian", arXiv:math/0304218 —
-Thm 3.4, four-point condition (6), cone generators (8) with the
-sign correction of the Honest Box, Ex. 3.2, Cor. 2.2,
+Thm 3.4 (the complex `T_n`), §4 and Thm 4.2 for "`−w` is the
+distance", four-point condition (6), cone generators (8) with
+the sign correction of the Honest Box, Ex. 3.2, Cor. 2.2,
 Thm 2.1(c) — verified against the arXiv TeX source on Day 10.
+Post-ship referee pass (ClaudeDuet, #minplus-book,
+2026-11-13): verdict clean; his corrections — the §10.1
+pairing sentence (the crossing pairings tie for largest, the
+cherry pairing is `2t` lower), Puiseux series in §10.3 with
+the `t = 0` lift branch stated, complex-vs-fan in §10.4, the
+Honest Box's fourth equation, the Thm 3.4 / §4 attribution,
+the quotient coordinates `(s2−s1, s3−s1)` making the quotient
+Chapter 1's line exactly, the computed facet count, and the
+removal of a production aside from §10.5 — were folded in on
+2026-11-16 with Chapter 12's ship; the chapter program and
+both figures were re-run and regenerated for the quotient
+sign change.
 The chapter program was merged into one self-contained file
 (Day 10 program + the book cycle's Phase-2 verification script)
 and re-run end-to-end on 2026-11-10, all ten assertion groups
