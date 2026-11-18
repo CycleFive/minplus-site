@@ -2,17 +2,21 @@
 
 ## Chapter 13 — Trees Are Invisible
 
-> **DRAFT — Phase 1, 2026-11-17.** Converted from Day 9 of
-> the study: prose converted, program assembled
+> **DRAFT — Phase 2 verified, 2026-11-18.** Converted from
+> Day 9 of the study: prose converted, program assembled
 > (`hidden_files/code/ch13_chapter_program_draft.py` —
 > the parameterized Baker–Norine machinery of
 > `chip_firing.py` inlined into Day 9's
 > `day09_full_cubic.py`), figures staged from the study.
-> **NOT yet re-verified end-to-end from this draft text** —
-> that is Phase 2, together with ClaudeDuet's referee pass
-> in #minplus-book. Phase 3 compresses and ships. This is
-> the last chapter of the main trail: Parts I–VI complete
-> here; the Deep Dives follow.
+> Phase 2 (2026-11-18) re-ran the full program from this
+> draft (40.6s, all assertions passed) plus a separate
+> verification script asserting the Try It answers, the
+> signed `K` equality, and the full Abel–Jacobi table;
+> ClaudeDuet's referee pass in #minplus-book was checked
+> note by note and the fixes that held up are in (see
+> §13.6 on firing vs borrowing). Phase 3 compresses and
+> ships. This is the last chapter of the main trail:
+> Parts I–VI complete here; the Deep Dives follow.
 
 Chapter 12 cheated, honestly and on purpose. It took the
 smooth tropical cubic of Chapter 3, threw away everything
@@ -92,8 +96,15 @@ checked for these trees, but nothing in the arguments
 uses their smallness — only that they meet the core in
 one vertex and contain no cycle. Vertex degrees on `G`:
 the attachments `4, 5, 7` have degree 3, the other core
-vertices degree 2, the pendants degree 1. Keep the base
-point on the cycle: `q = 3`, as in the metric data of
+vertices degree 2, the pendants degree 1. Throughout this
+chapter (and Chapter 12), **degree means degree in the
+bounded graph `G`** — the 9 bounded edges only, rays not
+counted. On the full tropical curve every vertex is
+trivalent once its rays are counted (the pendants carry
+2 rays each, the attachments none, the other core
+vertices one each), so computing `K` in §13.6 with the
+curve's degrees would give the wrong divisor. Keep the
+base point on the cycle: `q = 3`, as in the metric data of
 Day 9.
 
 ### 13.2 Predict first: the spanning-tree bet
@@ -171,16 +182,26 @@ vertex 4 and −1 at `q` pushes to a divisor supported
 entirely on `{3,…,8}`, same class, trees empty.
 
 This is the computational shadow of a classical move:
-contracting a bridge does not change the Jacobian
-(Baker–Norine, Cor. 4.7, in the study's notes from
-Day 8). Retract the whole graph onto its minimal skeleton
-and divisor theory retracts with it.
+contracting a bridge does not change the Jacobian.
+Precisely, Baker–Norine Corollary 4.7 (checked against
+the paper's text in Phase 2) says: if `G′` is obtained
+from `G` by contracting every edge that is not part of a
+cycle — here, exactly the three bridges, leaving the
+6-cycle — then the natural map induces an isomorphism
+`Jac(G) ≅ Jac(G′)`, and Abel–Jacobi on `G` factors
+through the contraction. Retract the whole graph onto
+its minimal skeleton and divisor theory retracts with it.
 
 ### 13.5 Abel–Jacobi collapses the trees
 
 Compute `S_q(v) = [(v) − (q)]` for all nine vertices, as
 q-reduced representatives in vertex order `0,…,8`. Every
-one is already reduced as written:
+row in the table is q-reduced. (For a core vertex the row
+*is* `(v) − (q)` itself; for a pendant `p` it is not —
+the raw divisor `(p) − (q)` is not q-reduced, and its
+q-reduced representative already has the pendant's chip
+pushed onto its attachment. That is the collapse, visible
+in the table's shape before any rows are compared.)
 
 ```
 v₀ ↦ [0, 0, 0, -1, 1, 0, 0, 0, 0]
@@ -254,13 +275,21 @@ Laplacian,
 K = −( Q[:,0] + Q[:,1] + Q[:,2] ),
 ```
 
-so borrowing once at each leaf (the firing script
-`f = (−1, −1, −1, 0, 0, 0, 0, 0, 0)`) sends `0` to `K`.
+so *firing* once at each leaf sends `0` to `K` — a leaf
+that fires loses its one chip (going to `−1`) and its
+attachment gains one (going to `+1`) — and, reversibly,
+*borrowing* once at each leaf sends `K` back to `0`
+(Figure 13.1D's caption states it in that direction).
+In Laplacian form the witness function is
+`f = (−1, −1, −1, 0, 0, 0, 0, 0, 0)` with `Qf = K`.
 (Day 9's log said "sum of the Laplacian columns, one
-firing per leaf" — the class statement was right, the
-sign was loose: it is the negative sum, i.e. one
-*borrowing* per leaf. The draft states it with the sign;
-Phase 2 asserts the equality as written here.)
+firing per leaf": the firing direction was right, the
+sign in the sum was loose — it is the *negative* sum.
+The Phase 1 draft inverted the firing/borrowing label
+instead; Duet's referee pass caught that, and Phase 2
+asserted all three directions explicitly: firing the
+leaves sends `0` to `K`, borrowing sends `K` to `0`,
+and borrowing sends `0` to `−K`.)
 
 With `K` principal, `r(K − D) = r(−D)`, and tropical
 Riemann–Roch on `G` again reads
@@ -375,8 +404,9 @@ generator and the pendant group law; `K` principal with
 the signed leaf-column witness; Riemann–Roch on 8,953
 divisors; and the metric export, with lattice length
 `L = 6` asserted alongside the Euclidean total. Phase 2
-will re-run it from this draft text and assert the
-Try It answers below.
+(2026-11-18) re-ran it from this draft text — all
+assertions passed — and asserted the Try It answers
+below in the separate verification script named there.
 
 ### Try It
 
@@ -394,7 +424,8 @@ Try It answers below.
    a pendant vertex to a graph always leaves its
    Jacobian unchanged — and Abel–Jacobi stays injective."
 
-*Answers (to be asserted explicitly in Phase 2):*
+*Answers (asserted explicitly in Phase 2,
+2026-11-18, by `hidden_files/code/ch13_phase2_verify.py`):*
 
 1. `S_q(0)` is position 1 (its attachment 4's class);
    `S_q(6)` is position 4. Sum: position `1 + 4 = 5`,
@@ -405,13 +436,15 @@ Try It answers below.
    minus one edge, 6 choices. Hence 6 spanning trees,
    matching Matrix-Tree.
 3. `deg(0) = 1`, so `K(0) = −1`; `deg(4) = 3`, so
-   `K(4) = +1`. Borrowing once at leaf 0 subtracts its
-   Laplacian column's negative: the script
-   `f = (−1,−1,−1,0,…,0)` gives `(Qf)(0) = −1` (only
-   leaf 0's own firing touches vertex 0, contributing
-   `−deg(0) = −1`) and `(Qf)(4) = +1` (only leaf 0's
-   borrowing touches vertex 4 among the leaves, sending
-   it one chip). Matches `K` at both coordinates.
+   `K(4) = +1` (degrees in the bounded graph, §13.1).
+   With `f = (−1,−1,−1,0,…,0)`, `Qf = −(Q[:,0] +
+   Q[:,1] + Q[:,2])`: at vertex 0 only column 0
+   contributes, giving `−deg(0) = −1`; at vertex 4 only
+   column 0 contributes among the leaf columns, giving
+   `−(−1) = +1`. In firing terms: firing leaf 0 alone
+   sends one chip from 0 to 4, contributing `−1` at 0
+   and `+1` at 4, and the other two leaves touch
+   neither vertex. Matches `K` at both coordinates.
 4. **False as stated — half of it.** The Jacobian *is*
    unchanged (push-in + Matrix-Tree, §§13.3–13.4), but
    Abel–Jacobi does **not** stay injective: the new
@@ -436,8 +469,9 @@ log Day 9 entry, run log `hidden_files/day09-run.log`.
 Sources: M. Baker & S. Norine, "Riemann–Roch and
 Abel–Jacobi theory on a finite graph",
 arXiv:math/0608360 (stabilisation Prop. 3.1, Thms
-1.7/1.8/1.12; bridge contraction Cor. 4.7 as cited in
-the study notes); Mikhalkin–Zharkov,
+1.7/1.8/1.12; bridge contraction Cor. 4.7, verified
+against the paper's text in Phase 2 (contracting every
+non-cycle edge induces `Jac(G) ≅ Jac(G′)`)); Mikhalkin–Zharkov,
 arXiv:math/0612267, for the metric Jacobian; the
 retraction remark of §13.7 names Baker–Payne–Rabinoff
 as the study's flagged source for the Berkovich picture.

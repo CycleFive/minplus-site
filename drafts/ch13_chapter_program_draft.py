@@ -19,7 +19,8 @@ cubic from its Newton subdivision (not hardcoded), then asserts:
     Baker-Norine Thm 1.8 needs 2-edge-connected, and the bridges are
     exactly the failure. The cycle generator still has order 6, and
     [pendant] + [x] = [attachment] + [x] for all x.
- 4. K = sum (deg(v)-2)(v) is principal (one firing per leaf kills it);
+ 4. K = sum (deg(v)-2)(v) is principal (one firing per leaf sends 0 to
+    it; equivalently one borrowing per leaf sends it to 0);
     Riemann-Roch r(D) - r(K-D) = deg(D) verified on 8,953 divisors.
  5. Metric coda (with Chapter 12's Sec. 12.8 correction applied):
     lattice length L = 6 (not the Euclidean 4+2*sqrt(2)); the six cycle
@@ -357,8 +358,6 @@ def two_core(n, edges):
     while True:
         leaves = [v for v in alive
                   if sum(1 for w in adj[v] if w in alive) <= 1]
-        # a single surviving vertex with a self... no; stop when no leaves
-        # (an isolated vertex would be a leaf too -- none here)
         if not leaves:
             break
         # never strip the last two vertices of an edge being peeled: plain
@@ -557,8 +556,8 @@ def main():
           f"(+1 at attachments, -1 at leaves)")
     assert int(K.sum()) == 0 == 2 * g - 2
     assert cf.same_class(K, np.zeros(n, dtype=int)), "K not principal?!"
-    print("     K is principal: K = sum over leaves of (laplacian column),"
-          " i.e. one firing per leaf")
+    print("     K is principal: K = -(sum over leaves of laplacian column),"
+          " i.e. one firing per leaf sends 0 to K")
     t2 = time.time()
     n_rr = 0
     for tup in itertools.product((-1, 0, 1), repeat=n):
