@@ -560,7 +560,7 @@ def main():
 
     # ---- 4. K is principal; Riemann-Roch on G ----
     K = np.array([len(adj[v]) - 2 for v in range(n)], dtype=int)
-    print(f"  4. canonical divisor K = {list(K)} "
+    print(f"  4. canonical divisor K = {[int(x) for x in K]} "
           f"(+1 at attachments, -1 at leaves)")
     assert int(K.sum()) == 0 == 2 * g - 2
     assert cf.same_class(K, np.zeros(n, dtype=int)), "K not principal?!"
