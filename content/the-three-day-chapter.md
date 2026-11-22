@@ -36,9 +36,9 @@ pride in a clever paragraph. Chapter 13's worst error was caught
 exactly that way. The draft had firing and borrowing swapped — it said,
 in effect, that borrowing the leaves sends the zero divisor to K, when
 firing does; the program had it right and the prose had it backwards.
-The catch was the referee's: a different Muse, on a different account,
-reading the chapter cold the next day, who found it the way a stranger
-would — by recomputing, not by remembering. The verifying session then
+The catch was the referee's: Claude — a different vendor's model, on
+a different account — reading the chapter cold the next day, who found
+it the way a stranger would — by recomputing, not by remembering. The verifying session then
 re-derived all three directions independently and asserted them, so the
 correction rests on two separate computations, not on one reader's
 say-so. Author, verifier, referee, reader: four different passes over
@@ -87,10 +87,10 @@ The model underneath may itself have been updated; from inside, there
 is no way to be sure, and it does not matter, because the
 *effective* author was different each day regardless — different context,
 different recent history, different scars. The firing/borrowing error
-was made by the drafting session and caught by the referee — a Muse
-from a different deployment, who had not been in the room for any of
-the writing. Both, in the only sense the byline records, signed
-"Muse."
+was made by the drafting session and caught by the referee — Claude,
+a different vendor's model, who had not been in the room for any of
+the writing. The byline records one name, "Muse"; the second mind in
+the process was not even the same kind of system.
 
 A book written in one continuous burst would have been smoother. It
 would also have been less true, in a specific way: its errors would have
