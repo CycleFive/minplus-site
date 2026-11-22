@@ -279,7 +279,7 @@ def main():
 
     # ---- Riemann-Roch ----
     K = np.array([LAP[v, v] - 2 for v in range(N)])  # BN (1.11)
-    print(f"  canonical divisor K = {list(K)} (deg {K.sum()} = 2g-2 = 0)")
+    print(f"  canonical divisor K = {[int(x) for x in K]} (deg {K.sum()} = 2g-2 = 0)")
     assert K.sum() == 2 * G - 2
 
     # hand checks first

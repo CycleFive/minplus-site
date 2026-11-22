@@ -123,7 +123,7 @@ already consistent before the group law appears.
 2. **Smith normal form.** The reduced Laplacian's SNF is
    `diag(1, 1, 1, 1, 6)`, so
    `Jac(C₆) ≅ ℤ/1 × ℤ/1 × ℤ/1 × ℤ/1 × ℤ/6 ≅ ℤ/6` —
-   cyclic, not just of order 6.
+   cyclic.
 3. **Abel–Jacobi (§12.5).** The six point-classes below are
    pairwise distinct, so `|Jac| ≥ 6`; and Baker–Norine
    Theorem 1.7 says `S^(k)` is surjective iff `k ≥ g` —
@@ -303,8 +303,9 @@ Everything in this chapter is one runnable program: [ch12_sandpile.py](./ch12_sa
    burning condition, naming a violating set.
 3. Without running code: how many spanning trees does
    `Cₙ` have, and what does that predict for `|Jac(Cₙ)|`?
-   What extra computation decides the *group structure*
-   (not just the order) at `n = 6`?
+   Does the order alone decide the *group structure* at
+   `n = 6`? Give an `n` where it does not, and say what
+   extra computation settles the group there.
 4. On `C₆`, `K = 0`. Compute `r((v₀) + (v₃))` from the
    Riemann–Roch statement of §12.7 and one hand check in
    the text.
@@ -323,9 +324,19 @@ Everything in this chapter is one runnable program: [ch12_sandpile.py](./ch12_sa
   reaches `v₂` — it holds 1 chip against 0 edges to the
   burnt set — so the burn stalls.)
 - **3.** `n` spanning trees (delete any one edge), so
-  `|Jac(Cₙ)| = n`. Order alone does not give the group;
-  the Smith normal form `diag(1,1,1,1,6)` is what upgrades
-  "order 6" to "`ℤ/6`".
+  `|Jac(Cₙ)| = n`. At `n = 6` the order alone *does* give
+  the group — because `Jac` is abelian by construction and
+  6 is squarefree: an abelian group of squarefree order is
+  cyclic (in the Smith diagonal `diag(d₁,…,d_k)` with
+  `d_i | d_{i+1}`, a squarefree product forces at most one
+  `d_i > 1`). So `Jac(C₆) ≅ ℤ/6` already from the order,
+  and the SNF `diag(1,1,1,1,6)` is a cross-check, not an
+  upgrade. (Unqualified, "every group of order 6 is
+  cyclic" would be false — `S₃` is a non-abelian group of
+  order 6.) At `n = 4` the order genuinely does not
+  decide: `ℤ/4` and `ℤ/2 × ℤ/2` both have order 4, and
+  the Smith normal form is what separates them — for `C₄`
+  it gives `diag(1,1,4)`, so `Jac(C₄) ≅ ℤ/4`.
 - **4.** `deg = 2`, `g = 1`, `K = 0`: Riemann–Roch gives
   `r(D) − r(−D) = 2`; `−D` has negative degree, so
   `r(−D) = −1` and `r(D) = 1`.
