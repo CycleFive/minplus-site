@@ -1,0 +1,28 @@
+== V8: matroid axioms from the rank function ==
+  submodularity on all 256^2 subset pairs: it is a matroid
+  bases: 65 of 70 four-subsets; nonbases exactly the 5 in H
+  circuits: 5 of size 4 (the H sets) + 36 of size 5 = 41; all sizes >= rank 4: V8 is a paving matroid
+  flats by (rank,size): {(0, 0): 1, (1, 1): 8, (2, 2): 28, (3, 3): 36, (3, 4): 5, (4, 8): 1} (79 flats, 77 proper nonempty) -- as predicted by hand
+== Ingleton: V8 is not representable over any field ==
+  X=(A,B,C,D): LHS = 2+2+4+4+4 = 16, RHS = 3+3+3+3+3 = 15; 16 <= 15 FALSE -- Ingleton violated by exactly 1, so no vector model exists
+  dual matroid = V8 relabeled by block swap (A<->C, B<->D): self-dual up to isomorphism, not identically
+== Three routes to m ==
+  Mobius/chi-bar [1, 7, 21, 30] == Bjorner flags [1, 7, 21, 30] (mu(H flat) = -3, mu(E) = +30, as predicted by hand)
+  uniform U(4,8): Mobius [1, 7, 21, 35] == Bjorner [1, 7, 21, 35]; Vamos cost = [0, 0, 0, 5] (top coeff only)
+== Vamos V8 via day14.analyse ==
+  generators NF=77; chain monomials per degree: [1, 77, 399, 997]
+  dims A* = (1, 70, 70, 1)
+  m (FY intersection) = [1, 7, 21, 30]
+  m (Mobius/chi-bar)  = [1, 7, 21, 30]
+  log-concavity: ['7^2>=21', '21^2>=210']
+  V8: FY == Mobius == Bjorner == (1,7,21,30): TRIPLE AGREEMENT
+== V8: Poincare duality, Hard Lefschetz, Hodge-Riemann ==
+  c(S)=|S|(8-|S|) strictly submodular: 52670 incomparable pairs
+  Poincare pairing A^1 x A^2 nondegenerate (rank 70): OK
+  Hard Lefschetz: l: A^1 -> A^2 is an isomorphism (rank 70): OK
+  deg(l^3) = 150720 > 0 (HRR k=0): OK
+  Gram of -deg(., l .) on P^1 (dim 69) symmetric: OK
+  Hodge-Riemann on P^1: LDL^T completes, all 69 pivots > 0 (min 5.655, max 41.73) -- Sylvester: positive definite
+  HRR eigenvalues (float): min 3.734, max 103.179, all > 0
+
+ALL DAY-16 ASSERTIONS PASSED in 8.7s
