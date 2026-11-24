@@ -1,0 +1,11 @@
+TryIt1: rho(A+C)=3 (in H), rho(C+D)=4 (basis): OK
+TryIt2: RHS five terms are exactly H, each rank 3, sum 15; LHS 16: OK
+V8 Whitney w=[1, -8, 28, -51, 30] -> chi t^4-8t^3+28t^2-51t+30, chi-bar coeffs [1, 7, 21, 30]: OK
+U(4,8) Whitney w=[1, -8, 28, -56, 35], m=[1, 7, 21, 35]: OK
+TryIt3: cost (0,0,0,5); log-concavity 49>=1*21, 441>=7*30=210: OK
+Fix2 proof: each H absorbs 4 triple flats (mu -1) into one flat (mu -3); w_3: -56 -> -51 (+1/defect x5); m_3: 35 -> 30: OK
+TryIt4: A+B and A+C are incomparable flats -> x_X * x_Y = 0 by CH2: OK
+Sec15.6: 79 flats, 77 proper nonempty; R^8/R.1 dim 7, fan dim 3: OK
+Sec15.5: 52,670 incomparable pairs = ordered (26,335 unordered): OK
+
+ALL PHASE-2 INDEPENDENT CHECKS PASSED

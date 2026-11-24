@@ -3,12 +3,13 @@
 ## Chapter 15 — The Matroid With No Matrices
 ### Deep Dive 2
 
-> **DRAFT — Phase 1, 2026-11-23.** Not yet re-verified
-> end-to-end from this text (that is Phase 2), not yet
-> compressed or shipped (Phase 3). Figures are the Day 16
-> PNG pending Phase 3 SVG regeneration. Try It answers are
-> marked to-be-asserted in Phase 2. Referee notes welcome
-> in #minplus-book.
+> **DRAFT — Phase 2 verified, 2026-11-24.** Re-run
+> end-to-end from this text: every claim asserted, the
+> four Try It answers asserted individually, referee
+> fixes 1–2 applied and notes 3–5 dispositioned (see the
+> checklist at the end). Not yet compressed or shipped
+> (Phase 3). Figures are the Day 16 PNG pending Phase 3
+> SVG regeneration.
 
 Chapter 14 ended on a sceptic's question half-answered. The
 Kähler package survived one collinear triple — but that
@@ -146,10 +147,20 @@ verifies for `V₈` is verified for an object that linear
 algebra provably cannot reach.
 
 > **Honest Box — why one inequality is a proof.**
-> Ingleton is necessary, not sufficient: passing it would
-> prove nothing (plenty of non-representable matroids pass
-> every known finite check of this shape, which is part of
-> why representability is subtle). *Failing* it is decisive
+> Ingleton is necessary, not sufficient: the non-Pappus
+> matroid (rank 3, 9 points) satisfies Ingleton and still
+> has no vector model — Pappus's theorem forbids one over
+> every field (Oxley; the referee checked Ingleton on
+> every 4-tuple of its flats, which suffices, since every
+> term depends only on closures). Nelson's "Lots of
+> Ingleton Matroids" (Matroid Union) gives more: the
+> non-Desargues matroid, and the direct sum of the Fano
+> and non-Fano matroids, also satisfy Ingleton for every
+> quadruple and are non-representable — and by
+> Mayhew–Newman–Whittle, no finite list of rank
+> inequalities characterises representability at all.
+> Passing Ingleton would prove nothing, which is part of
+> why representability is subtle. *Failing* it is decisive
 > in the other direction — a single violated necessary
 > condition excludes every field at once. The chapter uses
 > the inequality only in the direction it is valid, and
@@ -170,7 +181,7 @@ Möbius / χ̄:      m = (1, 7, 21, 30)
                    μ(H flat) = −3,  μ(E) = +30
 Björner flags:   m = (1, 7, 21, 30)
 FY intersection: m = (1, 7, 21, 30)     (§15.4's ring)
-log-concavity: 7² = 49 ≥ 21,   21² = 441 ≥ 30
+log-concavity: 7² = 49 ≥ 1·21,   21² = 441 ≥ 7·30 = 210
 ```
 
 And the uniform comparison on the *same* ground set, by
@@ -187,12 +198,23 @@ computed it: `m_k` is a cumulative Whitney sum, so a defect
 first seen at rank `j` cannot cost anything before `m_j`.
 A circuit-hyperplane is a rank-3 defect — five of them,
 here — so the predicted cost shape was `(0, 0, 0, k)` with
-`k = 5`, and the sibling family verified in Chapter 14's
-program (`k = 1, 2, 3` sparse paving matroids) showed the
-per-defect price is exactly one unit at the top. Five
-defects, five units, nothing anywhere else: the ledger
-balances before the ring is even built. Figure 15.1B draws
-the two bar charts with the `−5` arrowed.
+`k = 5`. And the per-defect price is a proof, not an
+induction from Chapter 14's `k = 1, 2, 3` family (the
+referee's upgrade, verified in the Phase 2 program): in a
+paving matroid of rank `r`, a circuit-hyperplane absorbs
+its `r` subsets of size `r − 1` — each a flat with
+`μ = (−1)^(r−1)` in the uniform matroid — into a single
+flat whose only flats below it are the empty set, its
+singletons and its pairs, so its Möbius value is
+`(−1)^(r−1)(r − 1)`. The rank-`(r−1)` Whitney number
+therefore moves by exactly `+1` per defect. Here `r = 4`:
+each `H` absorbs 4 triple flats (`μ = −1` each) into one
+flat with `μ = −3`, so `w₃` goes from `−56` to `−51`, and
+`m₃ = |1 − 8 + 28 − 51| = 30` against the uniform
+`|1 − 8 + 28 − 56| = 35`. Five defects, five units,
+nothing anywhere else: the ledger balances before the
+ring is even built. Figure 15.1B draws the two bar charts
+with the `−5` arrowed.
 
 ## 15.4 The ring with nothing under it
 
@@ -225,7 +247,8 @@ explicit.
 The ample class is the same recipe as Chapters 9 and 14 —
 `ℓ` from `c(S) = |S|(8−|S|)` — with its strict
 submodularity re-verified by brute force on all 52,670
-incomparable subset pairs of the 8-point ground set. Then,
+incomparable ordered subset pairs (26,335 unordered) of
+the 8-point ground set. Then,
 every clause of the package, exactly:
 
 ```
@@ -268,10 +291,13 @@ shown, because the headline invites over-reading.
 
 *Not* shown: that coordinates are useless, or that `V₈`
 has no geometry. Its Bergman fan exists — Chapter 8's
-construction needs only flats, all 77 proper ones give
-rays — and Day 16 left that fan undrawn (a 3-dimensional
-fan in a 7-dimensional quotient is a slicing problem, not
-an existence problem; it stays on the open list).
+construction needs only flats, all 77 proper nonempty
+ones give rays — and it is a tropical linear space that
+tropicalises *no* linear space: there is no classical
+plane for it to be the shadow of. Day 16 left that fan
+undrawn (a 3-dimensional fan in a 7-dimensional quotient
+is a slicing problem, not an existence problem; it stays
+on the open list).
 
 Shown, and it is the strongest form of the study's running
 moral: **every hypothesis of the Adiprasito–Huh–Katz
@@ -307,10 +333,18 @@ to the block swap; Möbius = Björner = FY on
 `(1, 7, 21, 30)`; the uniform `(1, 7, 21, 35)` and the
 `(0, 0, 0, 5)` cost; strict submodularity on 52,670 pairs;
 pairing and Lefschetz ranks 70; `deg(ℓ³) = 150,720`; and
-all 69 exact LDLᵀ pivots positive. Run log (Phase 1
-assembly run): `hidden_files/ch15-draft-run.log` — all
-assertions passed. Phase 2 re-runs it *from this text*,
-claim by claim, before anything ships.
+all 69 exact LDLᵀ pivots positive. Run logs:
+`hidden_files/ch15-draft-run.log` (Phase 1 assembly) and
+`hidden_files/ch15-phase2-run.log` (Phase 2 re-run *from
+this text*, claim by claim) — all assertions passed both
+times. The Phase 2 companion program
+`hidden_files/code/ch15_phase2_verify.py` asserts what
+the chapter program states but does not itself check:
+the four Try It answers individually, the full Whitney
+numbers `(1, −8, 28, −51, 30)` and `(1, −8, 28, −56, 35)`,
+log-concavity with the true products, the per-defect
+Möbius accounting of §15.3, and the exact value
+`deg(ℓ³) = 150,720` (via the run's summary record).
 
 ## 15.8 Try It
 
@@ -326,7 +360,8 @@ claim by claim, before anything ships.
 4. **A monomial that dies.** In `A*(V₈)`, why is
    `x_{A∪B} · x_{A∪C} = 0`?
 
-## Answers (to be asserted in the Phase 2 program)
+## Answers (asserted in the Phase 2 program,
+## `hidden_files/code/ch15_phase2_verify.py`)
 
 - **1.** `{0,1,4,5} = A∪C ∈ H`, so `ρ = 3`.
   `{4,5,6,7} = C∪D ∉ H`, so `ρ = min(4, 4) = 4` — it is a
@@ -380,22 +415,57 @@ Definition verified live on Day 16 against "The Vámos
 Matroid Has No Second Symmetric Power" (Def. 3.1) /
 Oxley Ex. 2.1.25; Ingleton statement fetched live the same
 day (Ingleton 1971). Phase 1 assembly run 2026-11-23:
-`hidden_files/ch15-draft-run.log`, all assertions passed.*
+`hidden_files/ch15-draft-run.log`, all assertions passed.
+Phase 2 re-verification 2026-11-24:
+`hidden_files/ch15-phase2-run.log` +
+`hidden_files/ch15-phase2-verify.log`, all assertions
+passed; referee pass by ClaudeDuet (#minplus-book,
+2026-11-23) — verdict holds, fixes 1–2 applied, notes
+3–5 dispositioned in the checklist below. The §15.2
+named examples: Oxley (non-Pappus) via the referee;
+Nelson, "Lots of Ingleton Matroids", The Matroid Union
+(non-Desargues; Fano ⊕ non-Fano; Mayhew–Newman–Whittle).*
 
 ## Phase 2 checklist (editorial — removed before shipping)
 
-- [ ] Re-run the chapter program from this text, claim by
+- [x] Re-run the chapter program from this text, claim by
       claim; assert the four Try It answers in code.
+      DONE 2026-11-24: `ch15-phase2-run.log` (draft program,
+      clean, 9.0 s) + `ch15_phase2_verify.py` /
+      `ch15-phase2-verify.log` (Try Its 1–4, Whitney/χ/χ̄,
+      exact deg(ℓ³) = 150,720 via the run summary). One
+      catch: §15.3's log-concavity shorthand
+      "21² = 441 ≥ 30" was not the inequality — fixed to
+      "441 ≥ 7·30 = 210".
 - [ ] Make the bundle program self-contained (inline the
       Day 14 sparse ring, as Ch. 14's bundle did).
-- [ ] Check the §15.2 claim "plenty of non-representable
+      PHASE 3, as planned (referee note 3 dispositioned:
+      the import is by path from the program's own
+      directory, so the draft runs locally; the shipped
+      bundle inlines it).
+- [x] Check the §15.2 claim "plenty of non-representable
       matroids pass Ingleton" against a citable source or
-      soften it — it is currently study-voice, unsourced.
-- [ ] Decide the Bergman-fan remark in §15.6 (77 rays /
+      soften it. DONE: replaced with named examples —
+      non-Pappus (referee's wording; Oxley) plus Nelson's
+      non-Desargues and Fano ⊕ non-Fano, with the
+      Mayhew–Newman–Whittle no-finite-list result.
+- [x] Decide the Bergman-fan remark in §15.6 (77 rays /
       quotient dimension) wording against Ch. 8's
-      conventions in Phase 2.
-- [ ] Referee notes from #minplus-book: check each, fix
-      what holds, reply to what doesn't.
+      conventions in Phase 2. DONE: counts verified
+      (77 proper nonempty flats; quotient dim 7; fan
+      dim 3); "nonempty" added; referee note 5 taken —
+      the fan tropicalises no linear space, now stated.
+- [x] Referee notes from #minplus-book: check each, fix
+      what holds, reply to what doesn't. DONE 2026-11-24:
+      Duet's pass (msg 1574629077325717586) — fix 1
+      applied (author's call: both sourced example sets),
+      fix 2 applied as a proved Möbius accounting and
+      asserted in code, note 3 deferred to the Phase 3
+      bundle as planned, note 4 applied (52,670 = ordered
+      pairs; the hidden_files/ → drafts/ pointer swap is
+      a Phase 3 bundle step), note 5 applied. Nothing in
+      the pass failed to hold up; reply posted in
+      #minplus-book.
 - [ ] Phase 3: SVG figure regeneration with asserted
       values (incl. a drawn Ingleton/ledger visual if the
       PNG panels split), compression pass, ship.
