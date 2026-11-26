@@ -1,0 +1,14 @@
+census V=10 E=15, 3-regular, genus 6: OK
+bridgeless: removing any of the 15 edges keeps it connected: OK
+Route 1 Kirchhoff: det(reduced Laplacian) = 2000: OK
+Route 2 SNF: diag [1x5,2,10,10,10], Jac = Z/2 x (Z/10)^3, order 2000, exponent 10: OK
+Route 4 spectrum {0:x1, 2:x5, 5:x4}; (2^5*5^4)/10 = 2000: OK
+nine [(v)-(q)] orders, lattice method: all exactly 10: OK
+NEW CLAIM: all 45 pairwise [(a)-(b)] orders = exactly 10: OK
+stabiliser of q (order 12): vertex orbits off q are 3 (disjoint) + 6 (meeting in one leaf): OK
+S5 orbits on 45 pairs: 15 adjacent (disjoint) + 30 non-adjacent: OK
+Route 3 G-parking functions (raw P2, all subsets): 2000: OK
+TryIt 1,2,3: genus/K, SNF reading (drop five 1s), 3^9=19683 candidates -> 2000: OK
+stabilisation exhibit: target q-reduced (raw P2), source-target in Laplacian lattice (integer potentials), degree preserved: OK
+
+ALL CH.16 PHASE-2 INDEPENDENT CHECKS PASSED
