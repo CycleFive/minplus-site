@@ -1,0 +1,129 @@
+Petersen graph: V=10, E=15, 3-regular, genus g=6
+bridgeless (2-edge-connected): OK -- BN Thm 1.8 predicts S_q^1 injective
+spanning trees (Kirchhoff det, exact) = 2000 (float route agrees: True)
+SNF of reduced Laplacian = [1, 1, 1, 1, 1, 2, 10, 10, 10]
+Jac(Petersen) ~= Z/2Z x Z/10Z x Z/10Z x Z/10Z
+invariant factors [2, 10, 10, 10], exponent = 10
+SNF(full L) = [1,1,1,1,1,2,10,10,10,0] -> coker L = Z + Jac: OK
+Laplacian spectrum (exact, sympy) = {5: 4, 2: 5, 0: 1}
+spectral Kirchhoff: (2^5 * 5^4)/10 = 2000 == det route: OK
+srg(10,3,0,1): A^2+A-2I = J; adjacency spectrum {3:x1, 1:x5, -2:x4} -> L = 3I-A spectrum as above: OK
+G-parking functions (q-reduced deg-0 reps) = 2000
+the 2000 reps land in 2000 distinct lattice classes: OK
+Abel-Jacobi S_q(v) = [(v)-(q)]: 10 distinct classes: OK
+Stab(q) (order 12) orbits off q: 3 disjoint splits (= N(q)) + 6 splits meeting q in one leaf: OK
+S_5 orbits on the 45 pairs: 15 adjacent + 30 non-adjacent: OK (distance-transitivity, not just the S_5 action)
+orders of [(v)-(q)]: {(0, 2): 10, (0, 3): 10, (0, 4): 10, (1, 2): 10, (1, 3): 10, (1, 4): 10, (2, 3): 10, (2, 4): 10, (3, 4): 10}
+all 45 pairwise differences [(a)-(b)] have order exactly 10: OK (corollary of the nine classes by vertex-transitivity)
+order distribution of Jac: {1: 1, 2: 15, 5: 124, 10: 1860} (93% order 10); |Jac[2]| = 16, |Jac[5]| = 125: OK
+group law: [a-q]+[b-q] == [(a)+(b)-2(q)] as q-reduced reps: OK
+group law: add_classes associative on 100 random triples: OK
+direct computations: r(0)=0, r(K)=g-1=5, r((q))=0: OK
+Riemann-Roch EXHAUSTIVE: identity holds for all 26000 class representatives (degrees -1..11 x 2000 classes): OK
+max r by degree 0..11: [0, 0, 0, 0, 1, 1, 2, 2, 3, 4, 5, 5]; divisorial gonality 4 (first r>=1 at degree 4): OK
+DP ranks agree with ChipFiring.rank on the 40-divisor seed-17 sample (now a cross-check, not the RR evidence): OK
+stabilization exhibit: [4, -2, 3, 0, -1, 2, 0, 1, -3, 2] -> [0, 2, 0, 1, 1, 1, 1, 0, 0, 0] in 10 phase-2 set-firings (lex order; 3 in reversed order -- the count is algorithm-dependent, the target is not)
+{
+ "V": 10,
+ "E": 15,
+ "genus": 6,
+ "spanning_trees": 2000,
+ "snf_diagonal": [
+  1,
+  1,
+  1,
+  1,
+  1,
+  2,
+  10,
+  10,
+  10
+ ],
+ "invariant_factors": [
+  2,
+  10,
+  10,
+  10
+ ],
+ "exponent": 10,
+ "laplacian_spectrum": {
+  "0": 1,
+  "2": 5,
+  "5": 4
+ },
+ "parking_functions": 2000,
+ "parking_distinct_classes": 2000,
+ "aj_orders": {
+  "(0, 2)": 10,
+  "(0, 3)": 10,
+  "(0, 4)": 10,
+  "(1, 2)": 10,
+  "(1, 3)": 10,
+  "(1, 4)": 10,
+  "(2, 3)": 10,
+  "(2, 4)": 10,
+  "(3, 4)": 10
+ },
+ "pairwise_difference_orders_all_10": true,
+ "pairwise_differences_checked": 45,
+ "order_distribution": {
+  "1": 1,
+  "2": 15,
+  "5": 124,
+  "10": 1860
+ },
+ "stabiliser_order": 12,
+ "orbits_off_q": {
+  "disjoint": 3,
+  "meeting_in_one": 6
+ },
+ "pair_orbits": {
+  "adjacent": 15,
+  "non_adjacent": 30
+ },
+ "rr_exhaustive_classes": 26000,
+ "gonality": 4,
+ "max_rank_by_degree": {
+  "0": 0,
+  "1": 0,
+  "2": 0,
+  "3": 0,
+  "4": 1,
+  "5": 1,
+  "6": 2,
+  "7": 2,
+  "8": 3,
+  "9": 4,
+  "10": 5,
+  "11": 5
+ },
+ "stabilization": {
+  "from": [
+   4,
+   -2,
+   3,
+   0,
+   -1,
+   2,
+   0,
+   1,
+   -3,
+   2
+  ],
+  "to": [
+   0,
+   2,
+   0,
+   1,
+   1,
+   1,
+   1,
+   0,
+   0,
+   0
+  ],
+  "fired_sets_lex": 10,
+  "fired_sets_reversed": 3
+ }
+}
+ALL CHAPTER-16 PHASE-2 ASSERTIONS PASSED

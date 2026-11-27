@@ -181,9 +181,9 @@ src = [4, -2, 3, 0, -1, 2, 0, 1, -3, 2]
 tgt = [0, 2, 0, 1, 1, 1, 1, 0, 0, 0]
 assert sum(src) == sum(tgt)
 off = {v: tgt[v] for v in others}
-assert tgt[q] == 0 and is_q_reduced(off)
+assert tgt[q] == 0 and all(tgt[v] >= 0 for v in others)  # P1, explicit
+assert is_q_reduced(off)  # P2, raw over all subsets
 diff = sp.Matrix(src) - sp.Matrix(tgt)
-sol = L.LUsolve(diff) if False else None
 # integer solution of L x = diff with x_q = 0 gauge: solve reduced system
 rhs = sp.Matrix([int(diff[i]) for i in others])
 xred = Lr.LUsolve(rhs)
